@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="82e84948-507f-44a2-a739-3de6a6bc540d" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UFSRCAT.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/UFSRCAT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UFSR_feature.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/USFRPCAT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/csv_builder.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/csv_builder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/moments_computer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/moments_computer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/post_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/post_processor.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1868975255">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.opened" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Python" value="2" />
+        </counts>
+      </usages-collector>
+    </session>
+    <session id="-338924180">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.25" value="1" />
+          <entry key="project.opened" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="md" value="1" />
+          <entry key="py" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Markdown" value="1" />
+          <entry key="Python" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="dummy" value="9" />
+          <entry key="md" value="710" />
+          <entry key="py" value="758" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Markdown" value="710" />
+          <entry key="PLAIN_TEXT" value="9" />
+          <entry key="Python" value="758" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>nro</find>
+      <find>vsta</find>
+      <find>try</find>
+      <find>rate</find>
+      <find>HM</find>
+      <find>_GM</find>
+      <find>GM</find>
+      <find>raw</find>
+      <find>TEST</find>
+      <find>aa2a</find>
+      <find>reg</find>
+      <find>print</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/data/output_csv/total" />
+        <option value="$PROJECT_DIR$/src/failed_benchmarks.csv" />
+        <option value="$PROJECT_DIR$/src/exp.py" />
+        <option value="$PROJECT_DIR$/data/output_csv/test_time.csv" />
+        <option value="$PROJECT_DIR$/data/log.sh" />
+        <option value="$PROJECT_DIR$/../data_archive/DUDE/clean.sh" />
+        <option value="$PROJECT_DIR$/../data_archive/DUDE/all/clean.sh" />
+        <option value="$PROJECT_DIR$/data/output_csv/test_EF.csv" />
+        <option value="$PROJECT_DIR$/data/output_csv/GM_EF=0.5.csv" />
+        <option value="$PROJECT_DIR$/data/output_csv/1.csv" />
+        <option value="$PROJECT_DIR$/data/output_csv/EF=0.25.csv" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/data/embeddings/vgfr2/csv_decoys_feature=True_pca=True.csv" />
+        <option value="$PROJECT_DIR$/data/output_csv/TT_manhattan_EF=0.25.csv" />
+        <option value="$PROJECT_DIR$/data/output_csv/TT_manhattan_EF=1.csv" />
+        <option value="$PROJECT_DIR$/data/output_csv/TT_manhattan_EF=0.5.csv" />
+        <option value="$PROJECT_DIR$/output_csv/TT_manhattan_EF=0.5.csv" />
+        <option value="$PROJECT_DIR$/output_csv/TT_manhattan_EF=0.25.csv" />
+        <option value="$PROJECT_DIR$/output_csv/TT_manhattan_EF=1.csv" />
+        <option value="$PROJECT_DIR$/data/raw_output_csv/TT_mixed_EF=0.25.csv" />
+        <option value="$PROJECT_DIR$/data/raw_output_csv/TT_mixed_EF=1.csv" />
+        <option value="$PROJECT_DIR$/data/raw_output_csv/TT_mixed_EF=0.5.csv" />
+        <option value="$PROJECT_DIR$/data/raw_output_csv/TT_cosine_EF=0.5.csv" />
+        <option value="$PROJECT_DIR$/data/raw_output_csv/TT_cosine_EF=0.25.csv" />
+        <option value="$PROJECT_DIR$/data/raw_output_csv/TT_cosine_EF=1.csv" />
+        <option value="$PROJECT_DIR$/data/output_csv/whole.csv" />
+        <option value="$PROJECT_DIR$/data/output_csv/whole_separated_sorted.csv" />
+        <option value="$PROJECT_DIR$/src/EF_computer.py" />
+        <option value="$PROJECT_DIR$/src/test.py" />
+        <option value="$USER_HOME$/Programmes/minervous/course_check.py" />
+        <option value="$PROJECT_DIR$/src/post_processor.py" />
+        <option value="$PROJECT_DIR$/src/UFSRCAT.py" />
+        <option value="$PROJECT_DIR$/src/main.py" />
+        <option value="$PROJECT_DIR$/src/csv_builder.py" />
+        <option value="$PROJECT_DIR$/src/UFSR_feature.py" />
+        <option value="$PROJECT_DIR$/src/moments_computer.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="75" />
+    <option name="y" value="-4" />
+    <option name="width" value="1075" />
+    <option name="height" value="1048" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="usrpcat" type="b2602c69:ProjectViewProjectNode" />
+              <item name="usrpcat" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="usrpcat" type="b2602c69:ProjectViewProjectNode" />
+              <item name="usrpcat" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data" />
+      <recent name="$PROJECT_DIR$/data/structures/gcr" />
+      <recent name="$PROJECT_DIR$/data/structures/cah2" />
+      <recent name="$PROJECT_DIR$/data/structures/dpp4" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data/embeddings" />
+      <recent name="$PROJECT_DIR$/data/raw_output_csv" />
+      <recent name="$PROJECT_DIR$/data/output_csv" />
+      <recent name="$PROJECT_DIR$/output_csv" />
+      <recent name="$PROJECT_DIR$/data" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.post_processor">
+    <configuration name="EF_computer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="usrpcat" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/EF_computer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="csv_builder" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="usrpcat" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/csv_builder.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="moments_computer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="usrpcat" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/moments_computer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="post_processor" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="usrpcat" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/post_processor.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="usrpcat" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.EF_computer" />
+      <item itemvalue="Python.post_processor" />
+      <item itemvalue="Python.test" />
+      <item itemvalue="Python.csv_builder" />
+      <item itemvalue="Python.moments_computer" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.post_processor" />
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.csv_builder" />
+        <item itemvalue="Python.moments_computer" />
+        <item itemvalue="Python.EF_computer" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="82e84948-507f-44a2-a739-3de6a6bc540d" name="Default" comment="" />
+      <created>1530222684975</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1530222684975</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.29125684" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32879582" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49585405" weight="0.33821988" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5041459" side_tool="true" weight="0.33821988" />
+      <window_info anchor="bottom" id="Python Console" order="8" weight="0.32984293" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32984293" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Data View" order="3" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26478717" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32879582" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49585405" weight="0.33821988" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5041459" side_tool="true" weight="0.33821988" />
+      <window_info anchor="bottom" id="Python Console" order="8" weight="0.32984293" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32984293" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Data View" order="3" />
+    </layout-to-restore>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/output_csv/TT_manhattan_EF=0.5.csv" />
+    <entry file="file://$PROJECT_DIR$/output_csv/TT_manhattan_EF=0.25.csv" />
+    <entry file="file://$PROJECT_DIR$/output_csv/TT_manhattan_EF=1.csv" />
+    <entry file="file://$PROJECT_DIR$/data/output_csv/corrected_0.25.csv" />
+    <entry file="file://$PROJECT_DIR$/data/embeddings/test_scaling/csv_actives_feature=False_pca=False.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/failed.csv" />
+    <entry file="file://$PROJECT_DIR$/data/log.sh" />
+    <entry file="file://$PROJECT_DIR$/data/clean.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="15" column="23" lean-forward="true" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/FF_manhattan_EF=0.5.csv" />
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/GM_manhattan_EF=0.25.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1034" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/GM_cosine_EF=0.5.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1034" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/TT_mixed_EF=1.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="542">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/TT_mixed_EF=0.25.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="542">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/TT_mixed_EF=1.csv" />
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/TT_mixed_EF=0.5.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="488">
+          <caret line="100" column="22" lean-forward="true" selection-start-line="100" selection-start-column="22" selection-end-line="100" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/TT_mixed_EF=0.25.csv" />
+    <entry file="file://$PROJECT_DIR$/data/output_csv/TT_mixed_EF=0.5.csv" />
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/TT_cosine_EF=0.5.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="542">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/TT_cosine_EF=0.5.csv" />
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/TT_cosine_EF=0.25.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="524">
+          <caret line="102" column="19" selection-start-line="102" selection-start-column="19" selection-end-line="102" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/TT_cosine_EF=0.25.csv" />
+    <entry file="file://$PROJECT_DIR$/data/output_csv/TT_cosine_EF=1.csv" />
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/TT_cosine_EF=1.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="524">
+          <caret line="102" column="19" selection-start-line="102" selection-start-column="19" selection-end-line="102" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/EF0.5.csv" />
+    <entry file="file://$PROJECT_DIR$/data/output_csv/EF1.csv" />
+    <entry file="file://$PROJECT_DIR$/data/output_csv/TEST.csv" />
+    <entry file="file://$PROJECT_DIR$/data/output_csv/test_scaled_aa2ar.25.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/First_plot.png" />
+    <entry file="file://$PROJECT_DIR$/data/embeddings/aa2ar/csv_actives_feature=False_pca=False.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/embeddings/aa2ar/csv_actives_3.csv" />
+    <entry file="file://$PROJECT_DIR$/data/embeddings/aa2ar/csv_decoys_3.csv" />
+    <entry file="file://$USER_HOME$/Programmes/minervous/course_check.py" />
+    <entry file="file://$PROJECT_DIR$/data/output_csv/whole_separated.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_csv/8_EF=0.5.csv" />
+    <entry file="file://$PROJECT_DIR$/data/raw_output_csv/FF_manhattan_EF=0.5.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/whole_separated_sorted.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="66" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/EF=0.25_test.csv" />
+    <entry file="file://$PROJECT_DIR$/data/output_csv/EF=0.25.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/EF=1.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/EF=0.5.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="131" selection-start-column="131" selection-end-column="131" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/whole.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1584">
+          <caret line="150" column="35" selection-start-line="150" selection-start-column="35" selection-end-line="150" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_csv/whole_sorted.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/USFRPCAT.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1908">
+          <caret line="106" column="96" selection-start-line="106" selection-start-column="96" selection-end-line="106" selection-end-column="96" />
+          <folding>
+            <element signature="e#178#196#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/csv_builder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2160">
+          <caret line="120" selection-start-line="120" selection-end-line="120" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UFSRCAT.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EF_computer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-324">
+          <caret line="36" column="17" lean-forward="true" selection-start-line="36" selection-start-column="17" selection-end-line="36" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="882">
+          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/moments_computer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2124">
+          <caret line="145" column="19" lean-forward="true" selection-start-line="145" selection-start-column="19" selection-end-line="145" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="126">
+            <caret line="7" column="212" selection-start-line="7" selection-start-column="212" selection-end-line="7" selection-end-column="212" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/post_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="837">
+          <caret line="182" selection-start-line="182" selection-end-line="182" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

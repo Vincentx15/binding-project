@@ -1,0 +1,5 @@
+#ignore data
+data
+
+#ignore test
+src/test.py
