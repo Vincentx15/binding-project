@@ -37,6 +37,11 @@ def extract_bp_pdb_from_list(list_of_ids, output_name, temp_path='../data/temp/c
     count, failed, tot = 0, 0, len(list_of_ids)
     failed_ids = []
 
+    # create output dir
+    output_path = os.path.join('../data/output_pdb', output_name)
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
     for pdb in list_of_ids:
         if count % 100 == 0:
             print("{}/{} calculés, {} failed".format(count, tot, failed))
@@ -47,7 +52,7 @@ def extract_bp_pdb_from_list(list_of_ids, output_name, temp_path='../data/temp/c
 
         # Extract and write the binding pockets
         try:
-            bp.path_to_pdb(path_name, os.path.join('../data/output_pdb', output_name), start_radius=start_radius,
+            bp.path_to_pdb(path_name, output_path, start_radius=start_radius,
 
                            max_radius=max_radius,
                            number_min=number_min)
@@ -140,9 +145,9 @@ if __name__ == "__main__":
         list_of_ids = pickle.load(file)
 
     start_time = time.time()
-    # failed = extract_bp_pdb_from_list(list_of_ids, 'test', temp_path='../data/temp/cif/', start_radius=12,
-    #                                   max_radius=15, number_min=6)
-    # print(failed)
+    failed = extract_bp_pdb_from_list(list_of_ids[:3], 'test/', temp_path='../data/temp/cif/', start_radius=12,
+                                      max_radius=15, number_min=6)
+    print(failed)
     print("--- %s seconds ---" % (time.time() - start_time))
 
     # start_time = time.time()
