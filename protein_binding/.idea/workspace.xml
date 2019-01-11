@@ -2,19 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="69b245ca-af03-4f5d-ba19-503fe4be4bd5" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shape/UFSR_feature.py" beforeDir="false" afterPath="$PROJECT_DIR$/shape/UFSR_feature.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shape/bp_extract.py" beforeDir="false" afterPath="$PROJECT_DIR$/shape/bp_extract.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shape/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/shape/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bp_pdb_from_pdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph/bp_pdb_from_pdb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/get_interaction.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph/get_interaction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/graph_from_pdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph/graph_from_pdb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/analyser.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/graph_analyser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/graph drawer.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/graph_3Ddrawer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/ligands_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/ligands_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/seaborne_subplots.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,9 +52,67 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="-822897288">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.0" value="2" />
+          <entry key="project.opened" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="md" value="1" />
+          <entry key="pdb" value="10" />
+          <entry key="py" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Markdown" value="1" />
+          <entry key="PLAIN_TEXT" value="10" />
+          <entry key="Python" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="py" value="597" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Python" value="597" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/shape/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="441">
+              <caret line="145" column="14" selection-start-line="145" selection-start-column="14" selection-end-line="145" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shape/bp_extract.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1926">
+              <caret line="111" selection-start-line="111" selection-end-line="111" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -100,7 +148,7 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -133,12 +181,12 @@
         <option value="$PROJECT_DIR$/tools/graph_analyser.py" />
         <option value="$PROJECT_DIR$/tools/graph_3Ddrawer.py" />
         <option value="$PROJECT_DIR$/tools/ligands_parser.py" />
-        <option value="$PROJECT_DIR$/shape/bp_extract.py" />
         <option value="$PROJECT_DIR$/shape/UFSR_feature.py" />
         <option value="$PROJECT_DIR$/src/main.py" />
         <option value="$PROJECT_DIR$/graph/main.py" />
         <option value="$PROJECT_DIR$/graph/graph_from_pdb.py" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/shape/bp_extract.py" />
         <option value="$PROJECT_DIR$/shape/main.py" />
       </list>
     </option>
@@ -149,11 +197,13 @@
     <option name="width" value="1075" />
     <option name="height" value="1048" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -161,11 +211,32 @@
               <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
               <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+              <item name="ligands" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+              <item name="output_pdb" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
+              <item name="shape" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -193,7 +264,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.graph_from_pdb">
+  <component name="RunManager" selected="Python.main">
     <configuration name="UFSR_feature" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="protein_binding" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -324,9 +395,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.graph_from_pdb" />
         <item itemvalue="Python.UFSR_feature" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.bp_extract" />
         <item itemvalue="Python.analyser" />
       </list>
@@ -353,7 +424,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32924336" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32864866" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32864866" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -392,20 +463,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/data/source_data/protein_ligands/199l.cif" />
-    <entry file="file://$PROJECT_DIR$/data/source_data/protein_ligands/1psr.cif" />
-    <entry file="file://$PROJECT_DIR$/data/source_data/protein_ligands/1ps7.cif" />
-    <entry file="file://$PROJECT_DIR$/data/raw.txt" />
-    <entry file="file://$PROJECT_DIR$/data/source_data/test_subset/1a0b.cif" />
-    <entry file="file://$PROJECT_DIR$/data/output_structure/output_subset/1a0c_CO_6.pdb" />
-    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/Bio/PDB/PDBIO.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/output_structure/output_subset/1a0b_ZN_0.pdb" />
     <entry file="file://$PROJECT_DIR$/src/__init__.py" />
     <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/networkx/drawing/nx_pylab.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -464,9 +521,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-27">
           <caret line="1" column="38" selection-start-line="1" selection-start-column="38" selection-end-line="1" selection-end-column="38" />
-          <folding>
-            <element signature="e#53#74#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -474,9 +528,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
           <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -487,13 +538,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools/seaborne_subplots.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="1" lean-forward="true" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/seaborne_subplots.py" />
     <entry file="file://$PROJECT_DIR$/data/protein/pdb_ids">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -519,19 +564,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1098">
           <caret line="133" column="21" selection-start-line="133" selection-start-column="21" selection-end-line="133" selection-end-column="21" />
-          <folding>
-            <element signature="e#178#196#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shape/bp_extract.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2117">
-          <caret line="123" lean-forward="true" selection-start-line="123" selection-end-line="123" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -546,9 +578,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="299">
           <caret line="93" lean-forward="true" selection-start-line="93" selection-end-line="93" />
-          <folding>
-            <element signature="e#65#82#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -556,9 +585,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1512">
           <caret line="84" selection-start-line="84" selection-end-line="84" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -566,9 +592,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1098">
           <caret line="151" column="17" lean-forward="true" selection-start-line="151" selection-start-column="17" selection-end-line="151" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -576,19 +599,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="821">
           <caret line="235" column="4" selection-start-line="235" selection-start-column="4" selection-end-line="235" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shape/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="90" selection-start-line="90" selection-end-line="90" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -596,9 +606,57 @@
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="FIRST">
           <first_editor relative-caret-position="54">
-            <caret line="3" column="9" lean-forward="true" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
+            <caret line="3" column="9" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a0h_NAG_2.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a0h_NAG_3.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a8r_GTP_7.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a8r_GTP_6.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a8r_GTP_4.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a8r_GTP_5.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a8r_GTP_2.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a8r_GTP_1.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/1a8r_GTP_3.pdb">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shape/test12as_AMP_0.pdb" />
+    <entry file="file://$PROJECT_DIR$/shape/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="441">
+          <caret line="145" column="14" selection-start-line="145" selection-start-column="14" selection-end-line="145" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shape/bp_extract.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1926">
+          <caret line="111" selection-start-line="111" selection-end-line="111" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

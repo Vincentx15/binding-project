@@ -44,7 +44,6 @@ def find_ligands_residue(structure):
     return ret
 
 
-# TODO : Fix the order of the loops, it looks weird, should it be the other way or do we want to look for each neighbor and then get a fixed number of them
 def find_spatial_binding_pocket(structure, ligand, start_radius, max_radius, number_min):
     """
     Find the smaller pocket
@@ -58,17 +57,22 @@ def find_spatial_binding_pocket(structure, ligand, start_radius, max_radius, num
     """
     searcher = Bio.PDB.NeighborSearch(list(structure.get_atoms()))
     neighbors = set()
+    # Start by picking the neighbors closer to start radius
     for atom in ligand.get_atoms():
-        atom_result = []
         center = np.array(atom.get_coord())
         radius = start_radius
+        atom_result = []
+        # Get the number_min neighbors of each point by increasing the start_radius while the max_radius wasn't reached
         while len(atom_result) < number_min and radius < max_radius:
+            # Start the search with the given center and radius
+            atom_result = []
             atom_neighbors = searcher.search(center, radius)
-            radius += 1
+            # Filter out atoms part of water or pocket residue
             for atom_neighbor in atom_neighbors:
                 residue = atom_neighbor.get_parent()
                 if residue != ligand and residue.get_resname() != 'HOH':
                     atom_result.append(atom_neighbor)
+            radius += 1
         for neighbor in atom_result:
             neighbors.add(neighbor)
     return neighbors

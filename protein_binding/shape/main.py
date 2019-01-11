@@ -8,7 +8,7 @@ import time
 import csv
 
 
-def extract_bp_pdb_from_directory(path, output_path):
+def extract_bp_pdb_from_directory(path, output_path, start_radius=3, max_radius=10, number_min=4):
     """
     Takes the path of a directory and write extracted bp pdbs in the output path directory
     :param path: directory of protein pdbs
@@ -17,12 +17,55 @@ def extract_bp_pdb_from_directory(path, output_path):
     """
     io = Bio.PDB.PDBIO()
     for pdb in os.listdir('../data/protein/' + path):
-        bp.path_to_pdb('../data/protein/' + path + pdb, '../data/output_pdb/' + output_path, io=io)
+        bp.path_to_pdb('../data/protein/' + path + pdb, '../data/output_pdb/' + output_path,
+                       start_radius=start_radius, max_radius=max_radius, number_min=number_min, io=io)
 
 
+def extract_bp_pdb_from_list(list_of_ids, output_name, temp_path='../data/temp/cif/', start_radius=3,
+                             max_radius=10, number_min=4):
+    """
+    Do the bp extraction pipeline for a list of pdb ids. Fetch them in a temporary dir, then apply bp parsing
+    :param list_of_ids: list with string corresponding to pdb ids
+    :param output_name: should complement a directory path such as 'test/'
+    :param temp_path: Temporary path to download the structure
+    :param start_radius: 
+    :param max_radius:
+    :param number_min:
+    :return:
+    """
+    pdbl = Bio.PDB.PDBList(verbose=False)
+    count, failed, tot = 0, 0, len(list_of_ids)
+    failed_ids = []
+
+    for pdb in list_of_ids:
+        if count % 100 == 0:
+            print("{}/{} calculés, {} failed".format(count, tot, failed))
+        count += 1
+
+        # download the required pdb
+        path_name = pdbl.retrieve_pdb_file(pdb, pdir=temp_path, file_format="mmCif")
+
+        # Extract and write the binding pockets
+        try:
+            bp.path_to_pdb(path_name, os.path.join('../data/output_pdb', output_name), start_radius=start_radius,
+
+                           max_radius=max_radius,
+                           number_min=number_min)
+        except:
+            failed += 1
+            failed_ids.append(pdb)
+            continue
+
+        # Clear the full download
+        os.remove(path_name)
+    return failed_ids
+
+
+# 14s for 20 structures, downloads are the longest (11s)
+# Therefore the parallel is not really the longest part
 def extract_ufsr_from_directory(path, output_name):
     """
-    :param path: path to a preprocessed pdb directory
+    :param path: path to a pdb directory
     :param output_name: Where to write the embeddings
     :return:
     """
@@ -36,8 +79,6 @@ def extract_ufsr_from_directory(path, output_name):
             for ligand, ufsr in ufsr_dict.items():
                 row = [pdb] + [ligand.get_resname()] + list(ufsr)
                 wr.writerow(row)
-# Facteur limitant est la création des features
-# total pour les 50 samples, et un output de 119 : 10.2s
 
 
 def extract_ufsr_from_list(list_of_ids, output_name, temp_path='../data/temp/cif/', number_of_moments=3):
@@ -86,13 +127,23 @@ def extract_ufsr_from_list(list_of_ids, output_name, temp_path='../data/temp/cif
                 row = [pdb] + [ligand.get_resname()] + list(feature)
                 wr.writerow(row)
     return failed_ids
+
+
 # 14s for 20 structures, downloads are the longest (11s)
 # Therefore the parallel is not really the longest part
 
 
 if __name__ == "__main__":
+    pass
+
     with open("../data/protein/pdb_ids.p", "rb") as file:
         list_of_ids = pickle.load(file)
+
+    start_time = time.time()
+    # failed = extract_bp_pdb_from_list(list_of_ids, 'test', temp_path='../data/temp/cif/', start_radius=12,
+    #                                   max_radius=15, number_min=6)
+    # print(failed)
+    print("--- %s seconds ---" % (time.time() - start_time))
 
     # start_time = time.time()
     # failed = extract_ufsr_from_list(['1a0b','1l6l'], "usfr_whole")
