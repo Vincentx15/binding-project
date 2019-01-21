@@ -3,37 +3,20 @@ from sklearn.decomposition import PCA
 from scipy.special import cbrt
 from scipy.stats.stats import skew
 from scipy.stats import gmean, hmean
+import timeit
 
 """
-Performs the PCA to find the most relevant axis and compute the features of UFSR
-on the points (000),mean(100,-100), mean(010,0-10), mean(001,00-1)
-
-
-
-Compute distances
+Tweak the implementation of the USRPCAT benchmark in the ligand task to be able to use the PDB pockets as inputs
 """
-
-
-def centroidnp(arr):
-    """
-    returns the centroid of an array
-    :param arr:
-    :return:
-    """
-    length, dim = arr.shape
-    sums = np.array([np.sum(arr[:, i]) for i in range(dim)])
-    center = sums / length
-    return center
-
 
 
 def find_pivots(X, distance=4):
     """
-    :param X: array of positions
+    :param X: array of positions, shape : 'number of points, dimension'
     :param distance: distance in Angstroms of the pivots to the centroids
     :return: positions of the ufsr pivots as array of coordinates
     """
-    center = centroidnp(X)
+    center = np.mean(X)
     # make PCA
     n_components = X.shape[1]
     pca = PCA(n_components=n_components)
@@ -74,11 +57,11 @@ def usr_moments_with_existing(coords, ref_points, number_of_moments=3, mean=0):
     :param coords:
     :param ref_points:
     :param number_of_moments:
-    :param mean:
+    :param mean: index in [np.mean, geometrical_mean, harmonical_mean]
     :return:
     """
     n_dimension = coords.shape[1]
-    center = centroidnp(coords)
+    center = np.mean(coords)
     # get distance matrix where rows are pivot points and columns are data points
     dist_to_centroid = np.array([[np.linalg.norm(coords[j] - center) for j in range(coords.shape[0])]])
     dist_matrix = np.spatial.distance_matrix(ref_points, coords)
@@ -122,6 +105,7 @@ def usr_moments(coords, number_of_moments=3, mean=0, distance=4):
 
     :param coords: input
     :param number_of_moments: number of moments computed, for instance, [mu, sigma] means number_moments = 2
+    :param mean: index in [np.mean, geometrical_mean, harmonical_mean]
     """
     ref_points = find_pivots(coords, distance)
     ufsr_feature = usr_moments_with_existing(coords, ref_points,
@@ -130,38 +114,5 @@ def usr_moments(coords, number_of_moments=3, mean=0, distance=4):
     return ref_points, ufsr_feature
 
 
-# X = np.array([[0, 0], [5, 2], [1, 1], [2, 2], [3, 2], [5, 5], [6, 6.57]])
-# Y = np.array([[12, 12], [5, 2], [1, 1], [2, 2], [3, 2], [5, 5], [6, 6.57]])
-# x = np.array([1,2,3,4,5,6])
-# y = np.array([6,5,4,3,2,1])
-#  print(harmonical_mean(x,y))
-
-
-# feat = usr_moments(Y)
-# print(feat)
-#
-# feat_bis = usr_moments(X)
-# print(feat_bis)
-
-
-# returns the similarity measure of two arrays
-def usfr_similarity(x, y):
-    x = np.asarray(x)
-    y = np.asarray(y)
-    try:
-        similarity_measure = 1 / (1 + np.sum(abs(x - y)))
-    except:
-        return None
-    return similarity_measure
-
-
-# copied from scipy documentation
-def distance_matrix(x, y, output_name=0, fun=usfr_similarity):
-    x = np.asarray(x)
-    m, k = x.shape
-    y = np.asarray(y)
-    n, kk = y.shape
-    result = np.empty((m, n), dtype=float)  # FIXME: figure out the best dtype
-    for i in range(m):
-        result[i, :] = [fun(x[i], y_j) for y_j in y]
-    return result
+def parse_pdb():
+    pass

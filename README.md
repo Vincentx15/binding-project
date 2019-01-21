@@ -1,7 +1,7 @@
 # Master Research
 
 ## cddd
-Is the autoencoders ligand encoding
+Is the autoencoders ligand encoding by Robin Winter
 
 ## rna-ligand
 Is Carlos RNA binding project
@@ -14,3 +14,4 @@ Introduces another embedding method closed to hand crafted features and benchmar
 
 ## protein-binding
 Do similar task as rna-ligand for proteins pockets. Returns pockets representations either using 3D point clouds or graphs
+Implements the ligand list extraction tool to produce dict/csv : ligand , embedding
