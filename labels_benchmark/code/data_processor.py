@@ -58,8 +58,8 @@ Get the Y
 
 def dict_smiles(path='data/all_smiles.sm'):
     """
-    Create a dict that maps those id to smiles
-    :return:
+    Create a dict that maps id 'ACE'... to smiles
+    :return: the dict
     """
     with open(path) as f:
         res = {}
@@ -70,6 +70,63 @@ def dict_smiles(path='data/all_smiles.sm'):
             except:
                 pass
     return res
+
+
+# res = dict_smiles()
+# print(res['ML5'])
+# print(len(res))
+
+
+'''
+The whole id:smiles dict is 28000 long but the data only contains 3365 ligands so we create 
+list or sub-dict to avoid useles cddd computations
+'''
+
+
+def list_smiles(path='data/whole_ligands_id.p'):
+    """
+    Get the whole list of bound protein into a set of ids, then turn it into smiles
+    :return:
+    """
+    whole_list_id = pickle.load(open(path, 'rb'))
+    res = dict_smiles()
+    whole_list_smiles = []
+    failed = []
+    for id in whole_list_id:
+        try:
+            smiles = res[id]
+            whole_list_smiles.append(smiles)
+        except KeyError:
+            failed.append(id)
+    return whole_list_smiles, failed
+
+
+# whole_list_smiles, failed = list_smiles()
+# print(whole_list_smiles)
+# print(len(whole_list_smiles))
+# print(failed)
+# pickle.dump(whole_list_smiles, open('data/whole_ligands_smiles.p', 'wb'))
+
+
+def subdict_smiles(path='data/whole_ligands_id.p'):
+    """
+    Subset the full dictionnary to only keep the relevant entries
+    :return:
+    """
+    whole_list_id = pickle.load(open(path, 'rb'))
+    print(whole_list_id)
+    res = dict_smiles()
+    subdict = {id: res[id] for id in set(whole_list_id).intersection(res.keys())}
+
+    return subdict
+
+
+# Compare it to the full one
+# whole_dict_smiles = subdict_smiles()
+# print(whole_dict_smiles['ACE'], len(whole_dict_smiles))
+# full = dict_smiles()
+# print(full['ACE'], len(full))
+# pickle.dump(whole_dict_smiles, open('data/whole_dict_smiles.p', 'wb'))
 
 
 def label_smiles(pickled_labels_path):
@@ -100,6 +157,7 @@ def label_smiles(pickled_labels_path):
     # print(label_smiles)
     return label_smiles
 
+# Carlos way : read the list of files and extract their id, then turn it into smiles
 # labels_id = 'data/delta_graphlist.pickle'
 # smiles_li = label_smiles(labels_id)
 # print(smiles_li)

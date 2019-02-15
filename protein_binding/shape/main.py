@@ -1,5 +1,5 @@
-import bp_extract as bp
-import UFSR_feature as ufsr
+import shape.bp_extract as bp
+import shape.UFSR_feature as ufsr
 import multiprocessing as mlt
 import Bio
 import os
