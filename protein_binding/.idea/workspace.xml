@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="69b245ca-af03-4f5d-ba19-503fe4be4bd5" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/../Conv3D/data_processor/pre_processor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shape/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shape/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../labels_benchmark/code/data_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/../labels_benchmark/code/data_processor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shape/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/shape/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="69b245ca-af03-4f5d-ba19-503fe4be4bd5" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,32 +107,32 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="cif" value="1" />
-          <entry key="log" value="2" />
+          <entry key="log" value="4" />
           <entry key="md" value="2" />
           <entry key="output" value="1" />
           <entry key="pdb" value="1" />
-          <entry key="py" value="13" />
+          <entry key="py" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Markdown" value="2" />
-          <entry key="PLAIN_TEXT" value="5" />
-          <entry key="Python" value="13" />
+          <entry key="PLAIN_TEXT" value="7" />
+          <entry key="Python" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="log" value="2" />
           <entry key="md" value="569" />
-          <entry key="py" value="3545" />
+          <entry key="py" value="4036" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="569" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="3545" />
+          <entry key="Python" value="4036" />
         </counts>
       </usages-collector>
     </session>
@@ -150,10 +142,22 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shape/data_preprocessor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2232">
-              <caret line="124" column="50" lean-forward="true" selection-start-line="124" selection-start-column="50" selection-end-line="124" selection-end-column="50" />
+            <state relative-caret-position="431">
+              <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/trash_code.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -172,7 +176,6 @@
     <findStrings>
       <find>ligand</find>
       <find>Data</find>
-      <find>prin</find>
       <find>_dictionary</find>
       <find>_dictionar</find>
       <find>good</find>
@@ -193,6 +196,7 @@
       <find>wr</find>
       <find>plot</find>
       <find>centroidnp</find>
+      <find>prin</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -243,6 +247,7 @@
         <option value="$PROJECT_DIR$/shape/main.py" />
         <option value="$PROJECT_DIR$/shape/README.md" />
         <option value="$PROJECT_DIR$/data/tensor/log" />
+        <option value="$PROJECT_DIR$/trash_code.py" />
         <option value="$PROJECT_DIR$/shape/data_preprocessor.py" />
       </list>
     </option>
@@ -266,28 +271,6 @@
               <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
               <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="output_pdb" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="tensor" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
-              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
-              <item name="shape" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -301,11 +284,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data/tensor" />
       <recent name="$PROJECT_DIR$/tools" />
       <recent name="$PROJECT_DIR$/tools/" />
       <recent name="$PROJECT_DIR$/data/source_data" />
       <recent name="$PROJECT_DIR$/data/output_structure" />
-      <recent name="$PROJECT_DIR$/data/output_graph" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -320,7 +303,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.data_preprocessor">
+  <component name="RunManager" selected="Python.trash_code">
     <configuration name="UFSRPCAT" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="protein_binding" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -355,27 +338,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/shape/data_preprocessor.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="graph_from_pdb" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="protein_binding" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/graph" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/graph/graph_from_pdb.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -426,6 +388,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="trash_code" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="protein_binding" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/trash_code.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="protein_binding" type="Python.Ipnb" factoryName="Jupyter Notebook">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -444,18 +427,18 @@
     </configuration>
     <list>
       <item itemvalue="Python.main" />
-      <item itemvalue="Python.graph_from_pdb" />
       <item itemvalue="Python.UFSRPCAT" />
       <item itemvalue="Python.name_parser" />
       <item itemvalue="Python.data_preprocessor" />
+      <item itemvalue="Python.trash_code" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.trash_code" />
         <item itemvalue="Python.data_preprocessor" />
         <item itemvalue="Python.name_parser" />
         <item itemvalue="Python.UFSRPCAT" />
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.graph_from_pdb" />
       </list>
     </recent_temporary>
   </component>
@@ -500,8 +483,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/data/source_data/protein_ligands/1a0b.cif" />
-    <entry file="file://$PROJECT_DIR$/runner.ipynb" />
     <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/seaborn/distributions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
@@ -722,16 +703,29 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/tensor/log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/tensor/log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="382" column="24" selection-start-line="382" selection-start-column="24" selection-end-line="382" selection-end-column="24" />
+        <state relative-caret-position="486">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trash_code.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shape/data_preprocessor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2232">
-          <caret line="124" column="50" lean-forward="true" selection-start-line="124" selection-start-column="50" selection-end-line="124" selection-end-column="50" />
+        <state relative-caret-position="431">
+          <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
           </folding>

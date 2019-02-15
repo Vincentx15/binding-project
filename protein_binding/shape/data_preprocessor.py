@@ -1,7 +1,6 @@
 import multiprocessing as mlt
 import Bio.PDB
 import os
-import pickle
 import time
 import csv
 import numpy as np
@@ -17,11 +16,12 @@ def coords_to_eigencoords(coords, n_components=3):
     """
     pca = PCA(n_components=n_components)
     coords_eigen = pca.fit_transform(coords)
-    ampli = (np.max(coords_eigen, axis=0) - np.min(coords_eigen, axis=0))
-    with open('../data/tensor/log', 'a') as f:
-        writer = csv.writer(f, delimiter=',')
-        writer.writerow(ampli)
-        # np.savetxt(f, ampli, delimiter=',')
+    # Additional module to do stats on the average size of the grid
+    # ampli = (np.max(coords_eigen, axis=0) - np.min(coords_eigen, axis=0))
+    # with open('../data/tensor/log', 'a') as f:
+    #     writer = csv.writer(f, delimiter=',')
+    #     writer.writerow(ampli)
+    #     # np.savetxt(f, ampli, delimiter=',')
     return coords_eigen
 
 
@@ -63,7 +63,6 @@ def eigen_coords_to_tensor(eigen_coords, list_labels, grid_size):
     :param grid_size: tuple as the shape of the 3D grid
     :return:
     """
-    out_grid = 0
     valid = 0
     if not len(eigen_coords) == len(list_labels):
         raise ValueError('Not every points has a label...')
@@ -87,9 +86,7 @@ def eigen_coords_to_tensor(eigen_coords, list_labels, grid_size):
             tensor[tensor_coords] += 1
             valid += 1
         except IndexError:
-            out_grid += 1
             continue
-    print(valid, out_grid)
     return tensor, valid
 
 
@@ -119,7 +116,6 @@ def pdb_to_tensor(structure, grid_size, threshold=10):
         # print('too few atoms overall')
         return None
     coords_eigen = coords_to_eigencoords(np.array(coords))
-    return
     tensor, valid = eigen_coords_to_tensor(coords_eigen, labels, grid_size)
     if valid < threshold:
         # print('too few atoms lying in the grid')
@@ -161,7 +157,7 @@ def embed_dir_parallel(in_path, out_path='../data/tensor/sample/', grid_size=(20
 
 
 t1 = time.time()
-failed = embed_dir_parallel('../data/output_pdb/whole/')
+failed = embed_dir_parallel('../data/output_pdb/whole/', grid_size=(42, 32, 32))
 print(time.time() - t1)
 # print(len(os.listdir(('../data/output_pdb/sample/no_duplicate/'))))
-# print(sum(failed))
+print(sum(failed))
