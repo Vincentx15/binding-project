@@ -93,13 +93,14 @@ class Tensorboard:
 
 
 def mkdirs(name):
-    # Try to make the logs folder
-    try:
-        log_path = os.path.join('logs/', name)
-        os.mkdir(log_path)
-    except FileExistsError:
-        raise ValueError('This name is already taken !')
+    # Try to make the logs folder but return error if already exist to avoid overwriting a model
+    log_path = os.path.join('logs/', name)
     save_path = os.path.join('trained_models', name)
-    os.mkdir(save_path)
-    save_path = os.path.join(save_path, name + 'pth')
-    return log_path, save_path
+    try:
+        os.mkdir(log_path)
+        os.mkdir(save_path)
+    except FileExistsError:
+        pass
+        # raise ValueError('This name is already taken !')
+    save_name = os.path.join(save_path, name + 'pth')
+    return log_path, save_name

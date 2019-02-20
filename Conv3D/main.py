@@ -14,10 +14,13 @@ from data.dataset_loader import Conv3DDataset
 from src.utils import Tensorboard, mkdirs
 import src.learning as learn
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+
 '''
 Dataloader creation
 '''
-dataset = Conv3DDataset(pocket_path='data/pockets/sample/', ligand_path='data/ligands/whole_dict_embed_128.p')
+dataset = Conv3DDataset(pocket_path='data/pockets/whole/', ligand_path='data/ligands/whole_dict_embed_128.p')
 
 n = len(dataset)
 indices = list(range(n))
@@ -36,7 +39,6 @@ valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size
 '''
 Model loading
 '''
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 model = C3D()
 model.to(device)
 
@@ -45,15 +47,19 @@ Optimizer instanciation
 '''
 
 criterion = torch.nn.MSELoss()
-optimizer = optim.SGD(model.parameters(), lr=1)
-scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.5)
+optimizer = optim.Adam(model.parameters())
+# optimizer = optim.SGD(model.parameters(), lr=1)
+# scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.5)
 
 '''
 Experiment Setup
 '''
-name = 'First_test'
+name = 'Other_test'
 log_folder, result_folder = mkdirs(name)
 writer = Tensorboard(log_folder)
+
+print(sum(p.numel() for p in model.parameters()))
+
 
 '''
 Run
