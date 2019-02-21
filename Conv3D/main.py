@@ -14,8 +14,9 @@ from data.dataset_loader import Conv3DDataset
 from src.utils import Tensorboard, mkdirs
 import src.learning as learn
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+from torchsummary import summary
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 '''
 Dataloader creation
@@ -36,11 +37,16 @@ valid_set = Subset(dataset, valid_indices)
 train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size)
 valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size)
 
+# print(n)
+
 '''
 Model loading
 '''
 model = C3D()
 model.to(device)
+if torch.cuda.device_count() > 1:
+    model = torch.nn.DataParallel(model)
+
 
 '''
 Optimizer instanciation
@@ -58,22 +64,31 @@ name = 'Other_test'
 log_folder, result_folder = mkdirs(name)
 writer = Tensorboard(log_folder)
 
-print(sum(p.numel() for p in model.parameters()))
+# train_loader = iter(train_loader)
+
+# print(next(train_loader)[0].shape)
+# summary(model, (4, 42, 32, 32))
+# for p in model.parameters():
+#     print(p.__name__)
+#     print(p.numel())
+# print(sum(p.numel() for p in model.parameters()))
+# print(sum(p.numel() for p in model.parameters()))
+# print(sum(p.numel() for p in model.parameters()))
 
 
 '''
 Run
 '''
-learn.train_model(model=model,
-                  criterion=criterion,
-                  optimizer=optimizer,
-                  device=device,
-                  train_loader=train_loader,
-                  validation_loader=valid_loader,
-                  save_path=result_folder,
-                  writer=writer,
-                  num_epochs=5,
-                  wall_time=.25)
+# learn.train_model(model=model,
+#                   criterion=criterion,
+#                   optimizer=optimizer,
+#                   device=device,
+#                   train_loader=train_loader,
+#                   validation_loader=valid_loader,
+#                   save_path=result_folder,
+#                   writer=writer,
+#                   num_epochs=5,
+#                   wall_time=.25)
 
 '''
 configuration = {

@@ -24,29 +24,29 @@ class C3D(nn.Module):
         self.group4 = nn.Sequential(
             nn.Conv3d(256, 512, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv3d(512, 512, kernel_size=3, padding=1),
+            nn.Conv3d(512, 512, kernel_size=3, padding=1, groups=2),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=(2, 2, 2), stride=(2, 2, 2)))
 
         self.group5 = nn.Sequential(
             nn.Conv3d(512, 512, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv3d(512, 512, kernel_size=3, padding=1),
+            nn.Conv3d(512, 512, kernel_size=3, padding=1, groups=2),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=(2, 2, 2), stride=(2, 2, 2)))
 
         self.fc1 = nn.Sequential(
-            nn.Linear(512 * 3 * 3, 2048),               #
+            nn.Linear(512, 256),  #
             nn.ReLU(),
             nn.Dropout(0.5))
 
         self.fc2 = nn.Sequential(
-            nn.Linear(2048, 512),
+            nn.Linear(256, 128),
             nn.ReLU(),
             nn.Dropout(0.5))
 
         self.fc3 = nn.Sequential(
-            nn.Linear(512, 128))  # 101
+            nn.Linear(128, 128))  # 101
 
         self._features = nn.Sequential(
             self.group1,

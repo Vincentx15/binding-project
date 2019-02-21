@@ -1,7 +1,7 @@
-data/
+data/ligands/
+data/pockets/
 trained_models/
 logs/
 notebooks/
-c3d_pytorch/
 *__pycache__*
 *trash*
