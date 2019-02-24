@@ -27,19 +27,9 @@ def test(model, test_loader, test_loss_fn, device):
 
 
 def train_model(model, criterion, optimizer, device, train_loader, validation_loader, save_path,
-                writer=None, num_epochs=25, wall_time=.25):
+                writer=None, num_epochs=25, wall_time=None):
     """
-    Performs the entire training routine. Save the model in the save_path
-        device:
-        dataloaders:  and validation
-        writer (Writer): the writer for gathering training data (loss and accuracy)
-        num_epochs (int): the number of epochs for training
-        log_interval (int): controls the rate of logs
-        wall_time (float): the wall time (in hours) given to the compute node, to make sure everything is saved
-
-    Returns:
-        model: the best model among all epochs.
-
+    Performs the entire training routine.
     :param model: (torch.nn.Module): the model to train
     :param criterion: the criterion to use (eg CrossEntropy)
     :param optimizer: the optimizer to use (eg SGD or Adam)
@@ -124,11 +114,11 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
                 print('This model was early stopped')
                 break
 
-
-        # Break out of the loop if we might go beyond the wall time
-        time_elapsed = time.time() - start_time
-        if time_elapsed * (1 + 1 / (epoch + 1)) > .95 * wall_time * 3600:
-            break
+        if wall_time is not None:
+            # Break out of the loop if we might go beyond the wall time
+            time_elapsed = time.time() - start_time
+            if time_elapsed * (1 + 1 / (epoch + 1)) > .95 * wall_time * 3600:
+                break
     return best_loss
 
 

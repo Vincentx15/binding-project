@@ -4,6 +4,44 @@ import numpy as np
 import pickle
 import os
 import time
+from torch.utils.data import Subset, DataLoader
+
+'''
+The data loading creation pipeline is not very weird except from the generating process for our data:
+To avoid storing all the rotation we create them on the fly (not too long)
+Therefore, we cannot split the dataset in the usual way to avoid putting all the rotational augmentation 
+in the same subset
+'''
+
+
+def get_data(batch_size=64):
+    """
+    Get the data Pytorch way
+    :param batch_size: int
+    :return:
+    """
+
+    dataset = Conv3DDataset(pocket_path='data/pockets/whole/', ligand_path='data/ligands/whole_dict_embed_128.p')
+
+    n = len(dataset)
+    indices = list(range(n))
+    np.random.seed(0)
+    np.random.shuffle(indices)
+    split_train, split_valid = 0.7, 0.85
+
+    train_indices = indices[:int(split_train * n)]
+    valid_indices = indices[int(split_train * n):int(split_valid * n)]
+    test_indices = indices[int(split_valid * n):]
+
+    train_set = Subset(dataset, train_indices)
+    valid_set = Subset(dataset, valid_indices)
+    test_set = Subset(dataset, test_indices)
+
+    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size)
+    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size)
+    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size)
+
+    return train_loader, valid_loader, test_loader
 
 
 def rotate(tensor, i):

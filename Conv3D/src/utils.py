@@ -102,5 +102,5 @@ def mkdirs(name):
     except FileExistsError:
         pass
         # raise ValueError('This name is already taken !')
-    save_name = os.path.join(save_path, name + 'pth')
+    save_name = os.path.join(save_path, name + '.pth')
     return log_path, save_name

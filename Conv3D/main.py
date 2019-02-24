@@ -7,46 +7,47 @@ from torch.utils.data import Subset, DataLoader
 import os
 import numpy as np
 import time
+import argparse
+from torchsummary import summary
 
 # Homemade modules
-from models.C3D import C3D
-from data.dataset_loader import Conv3DDataset
+from data.dataset_loader import Conv3DDataset, get_data
 from src.utils import Tensorboard, mkdirs
 import src.learning as learn
+from models.SmallC3D import SmallC3D
+from models.Toy import Toy
+from models.C3D import C3D
 
-from torchsummary import summary
+
+'''
+How many GPUs are we using and should we use them in parallel ?
+
+Experiments on very large networks seem to show that it is not faster to use several ones
+'''
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--parallel", help="decide if we run thing on parallel", action='store_true')
+args = parser.parse_args()
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 '''
 Dataloader creation
 '''
-dataset = Conv3DDataset(pocket_path='data/pockets/whole/', ligand_path='data/ligands/whole_dict_embed_128.p')
 
-n = len(dataset)
-indices = list(range(n))
-split = 0.8
-batch_size = 32
-
-train_indices = indices[:int(split * n)]
-valid_indices = indices[int(split * n):]
-
-train_set = Subset(dataset, train_indices)
-valid_set = Subset(dataset, valid_indices)
-
-train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size)
-valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size)
-
-# print(n)
+batch_size = 64
+train_loader, valid_loader, test_loader = get_data(batch_size)
 
 '''
 Model loading
 '''
-model = C3D()
+# model = Toy()
+# model = C3D()
+model = SmallC3D()
 model.to(device)
-if torch.cuda.device_count() > 1:
-    model = torch.nn.DataParallel(model)
 
+if args.parallel:
+    if torch.cuda.device_count() > 1:
+        model = torch.nn.DataParallel(model)
 
 '''
 Optimizer instanciation
@@ -60,35 +61,31 @@ optimizer = optim.Adam(model.parameters())
 '''
 Experiment Setup
 '''
-name = 'Other_test'
+name = 'Smaller'
 log_folder, result_folder = mkdirs(name)
 writer = Tensorboard(log_folder)
 
 # train_loader = iter(train_loader)
-
 # print(next(train_loader)[0].shape)
 # summary(model, (4, 42, 32, 32))
 # for p in model.parameters():
 #     print(p.__name__)
 #     print(p.numel())
 # print(sum(p.numel() for p in model.parameters()))
-# print(sum(p.numel() for p in model.parameters()))
-# print(sum(p.numel() for p in model.parameters()))
 
 
 '''
 Run
 '''
-# learn.train_model(model=model,
-#                   criterion=criterion,
-#                   optimizer=optimizer,
-#                   device=device,
-#                   train_loader=train_loader,
-#                   validation_loader=valid_loader,
-#                   save_path=result_folder,
-#                   writer=writer,
-#                   num_epochs=5,
-#                   wall_time=.25)
+learn.train_model(model=model,
+                  criterion=criterion,
+                  optimizer=optimizer,
+                  device=device,
+                  train_loader=train_loader,
+                  validation_loader=valid_loader,
+                  save_path=result_folder,
+                  writer=writer,
+                  num_epochs=400)
 
 '''
 configuration = {
