@@ -17,12 +17,13 @@ def test(model, test_loader, test_loss_fn, device):
 
     test_loss = 0
     test_size = 0
-    for inputs, targets in test_loader:
+    for batch_idx, (inputs, targets) in enumerate(test_loader):
         inputs, targets = inputs.to(device), targets.to(device)
-
         output = model(inputs)
         test_size += len(inputs)
-        test_loss += test_loss_fn(output, targets)
+        test_loss += test_loss_fn(output, targets).item()
+        if not batch_idx % 50 :
+            print('Computed {:.2f} batches for the test'.format(batch_idx))
     test_loss /= test_size
     return test_loss
 
@@ -65,11 +66,11 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
 
             inputs, labels = inputs.to(device), labels.to(device)
 
-            optimizer.zero_grad()
             out = model(inputs)
             loss = criterion(out, labels)
             loss.backward()
             optimizer.step()
+            optimizer.zero_grad()
 
             running_loss += loss.item()
             # running_corrects += labels.eq(target.view_as(out)).sum().item()
@@ -86,8 +87,6 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
                 # tensorboard logging
                 writer.log_scalar("Training loss", loss.item(),
                                   epoch * num_batches + batch_idx)
-
-                debug_memory()
 
         # Log training metrics
         train_loss = running_loss / num_batches

@@ -108,7 +108,7 @@ def mkdirs(name):
 
 def debug_memory():
     import collections, gc, torch
-    tensors = collections.Counter((str(o.device), o.dtype, tuple(o.shape))
+    tensors = collections.Counter((str(o.device), o.dtype, tuple(o.shape), o.size())
                                   for o in gc.get_objects()
                                   if torch.is_tensor(o))
     for line in sorted(tensors.items()):

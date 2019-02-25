@@ -6,6 +6,7 @@ class SmallC3D(nn.Module):
     def __init__(self):
         super(SmallC3D, self).__init__()
         self.group1 = nn.Sequential(
+            # nn.MaxPool3d(kernel_size=2, stride=2),
             nn.Conv3d(4, 64, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.BatchNorm3d(64),
