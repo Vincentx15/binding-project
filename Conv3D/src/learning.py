@@ -1,6 +1,7 @@
 import time
 import torch
 import sys
+from src.utils import debug_memory
 
 
 def test(model, test_loader, test_loss_fn, device):
@@ -73,19 +74,22 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
             running_loss += loss.item()
             # running_corrects += labels.eq(target.view_as(out)).sum().item()
             if batch_idx % 20 == 0:
-                print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                time_elapsed = time.time() - start_time
+                print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}  Time: {:.2f}'.format(
                     epoch,
                     batch_idx * batch_size,
                     num_batches * batch_size,
                     100. * batch_idx / num_batches,
-                    loss.item()))
+                    loss.item(),
+                    time_elapsed))
 
                 # tensorboard logging
                 writer.log_scalar("Training loss", loss.item(),
                                   epoch * num_batches + batch_idx)
 
-        # Log training metrics
+                debug_memory()
 
+        # Log training metrics
         train_loss = running_loss / num_batches
         writer.log_scalar("Train loss during training", train_loss, epoch)
 

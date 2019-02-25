@@ -21,7 +21,7 @@ def get_data(batch_size=64):
     :return:
     """
 
-    dataset = Conv3DDataset(pocket_path='data/pockets/whole/', ligand_path='data/ligands/whole_dict_embed_128.p')
+    dataset = Conv3DDataset(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligands/whole_dict_embed_128.p')
 
     n = len(dataset)
     indices = list(range(n))
