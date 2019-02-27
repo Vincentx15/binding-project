@@ -8,12 +8,15 @@ import os
 import numpy as np
 import time
 import argparse
-from torchsummary import summary
+# from torchsummary import summary
 
 # Homemade modules
-from data.dataset_loader import Conv3DDataset, get_data
+# from data.dataset_loader import get_data
+from data.dataset_loader import get_data
+
 from src.utils import Tensorboard, mkdirs
 import src.timed_learning as learn
+
 from models.SmallC3D import SmallC3D
 from models.Toy import Toy
 from models.C3D import C3D
