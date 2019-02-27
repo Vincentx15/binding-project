@@ -2,7 +2,7 @@ import os
 import io
 import numpy as np
 from PIL import Image
-import tensorflow as tf
+from tensorflow import summary, Summary
 
 
 class Tensorboard:
@@ -42,13 +42,13 @@ class Tensorboard:
     """
 
     def __init__(self, logdir):
-        self.writer = tf.summary.FileWriter(logdir)
+        self.writer = summary.FileWriter(logdir)
 
     def close(self):
         self.writer.close()
 
     def log_scalar(self, tag, value, global_step):
-        summary = tf.Summary()
+        summary = Summary()
         summary.value.add(tag=tag, simple_value=value)
         self.writer.add_summary(summary, global_step=global_step)
         self.writer.flush()
@@ -70,7 +70,7 @@ class Tensorboard:
         for c in counts:
             hist.bucket.append(c)
 
-        summary = tf.Summary()
+        summary = Summary()
         summary.value.add(tag=tag, histo=hist)
         self.writer.add_summary(summary, global_step=global_step)
         self.writer.flush()
@@ -82,11 +82,11 @@ class Tensorboard:
         img = Image.open(plot_buf)
         img_ar = np.array(img)
 
-        img_summary = tf.Summary.Image(encoded_image_string=plot_buf.getvalue(),
+        img_summary = Summary.Image(encoded_image_string=plot_buf.getvalue(),
                                        height=img_ar.shape[0],
                                        width=img_ar.shape[1])
 
-        summary = tf.Summary()
+        summary = Summary()
         summary.value.add(tag=tag, image=img_summary)
         self.writer.add_summary(summary, global_step=global_step)
         self.writer.flush()

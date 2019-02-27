@@ -45,7 +45,7 @@ Dataloader creation
 '''
 
 batch_size = 128
-num_workers = 4 * used_gpus_count
+num_workers = 6 * used_gpus_count
 # num_workers = 20
 train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_workers=num_workers)
 

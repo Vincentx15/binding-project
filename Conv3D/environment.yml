@@ -8,7 +8,8 @@ dependencies:
   - python=3.6.8
   - pytorch=1.0.1=py3.6_cuda9.0.176_cudnn7.4.2_2
   - scipy=1.2.0
-  - tensorboard=1.12.2
+  - tensorflow=1.12.0
+
 
 
 

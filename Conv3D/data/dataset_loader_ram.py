@@ -22,13 +22,15 @@ def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligan
     ligands_dict = pickle.load(open(ligand_path, 'rb'))
     pockets_rotations = produce_list_pockets(pocket_path)
     print('number of points in total', len(pockets_rotations))
-    pockets_rotations = pockets_rotations[:1000]
+    a = time.perf_counter()
+    pockets_rotations = pockets_rotations[:15000]
+
     pocket_embeddings = produce_items(pockets_rotations)
 
     dataset = Conv3DDatasetRAM(ligands_dict=ligands_dict,
                                pockets_rotations=pockets_rotations,
                                pocket_embeddings=pocket_embeddings)
-
+    print('Done in : ', time.perf_counter() - a)
     n = len(dataset)
     indices = list(range(n))
     np.random.seed(0)
@@ -99,7 +101,7 @@ def f(x):
     pocket_tensor = torch.from_numpy(pocket_tensor)
     pocket_tensor = rotate(pocket_tensor, rotation)
     pocket_tensor = pocket_tensor.float()
-    return path_to_pdb, rotation, pocket_tensor
+    return pocket_tensor
 
 
 def produce_items(pockets_rotations):
@@ -138,6 +140,7 @@ class Conv3DDatasetRAM(Dataset):
 
 if __name__ == '__main__':
     pass
-    ds, *_ = get_data()
-    print(ds.pockets_rotations[5])
-    print(ds[5])
+    ds, *_ = get_data(pocket_path='pockets/unique_pockets/', ligand_path='ligands/whole_dict_embed_128.p',
+                      batch_size=4, num_workers=10)
+
+    print(ds[5][0].type())
