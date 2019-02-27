@@ -13,7 +13,7 @@ from torchsummary import summary
 # Homemade modules
 from data.dataset_loader import Conv3DDataset, get_data
 from src.utils import Tensorboard, mkdirs
-import src.learning as learn
+import src.timed_learning as learn
 from models.SmallC3D import SmallC3D
 from models.Toy import Toy
 from models.C3D import C3D
@@ -28,14 +28,21 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--parallel", help="decide if we run thing on parallel", action='store_true')
 args = parser.parse_args()
 
+
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+# This is to create an appropriate number of workers, but works too with cpu
+if args.parallel:
+    used_gpus_count = torch.cuda.device_count()
+else:
+    used_gpus_count = 1
 
 '''
 Dataloader creation
 '''
 
-batch_size = 64
-train_loader, valid_loader, test_loader = get_data(batch_size)
+batch_size = 4
+train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_gpu=used_gpus_count)
 
 '''
 Model loading
@@ -45,9 +52,8 @@ Model loading
 model = SmallC3D()
 model.to(device)
 
-if args.parallel:
-    if torch.cuda.device_count() > 1:
-        model = torch.nn.DataParallel(model)
+if used_gpus_count > 1:
+    model = torch.nn.DataParallel(model)
 
 '''
 Optimizer instanciation

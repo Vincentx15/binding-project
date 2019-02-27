@@ -60,15 +60,32 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
 
         running_loss = 0.0
 
+        end_g = 0
         num_batches = len(train_loader)
         for batch_idx, (inputs, labels) in enumerate(train_loader):
             batch_size = len(inputs)
 
+            start_loop = time.perf_counter()
             inputs, labels = inputs.to(device), labels.to(device)
+            torch.cuda.synchronize()  # wait for mm to finish
+            b = time.perf_counter() - start_loop
+            print('send_data {:.02e}s'.format(b))
 
+            a = time.perf_counter()
             out = model(inputs)
+            torch.cuda.synchronize()  # wait for mm to finish
+            c = time.perf_counter() - a
+            print('forward {:.02e}s'.format(c))
+
             loss = criterion(out, labels)
+
+            a = time.perf_counter()
             loss.backward()
+
+            torch.cuda.synchronize()  # wait for mm to finish
+            e = time.perf_counter() - a
+            print('Backward {:.02e}s'.format(e))
+
             optimizer.step()
             optimizer.zero_grad()
 
@@ -87,6 +104,13 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
                 # tensorboard logging
                 writer.log_scalar("Training loss", loss.item(),
                                   epoch * num_batches + batch_idx)
+
+            g = time.perf_counter()
+            print('Loop total {:.02e}s'.format(g - start_loop))
+            print('Loop total with for {:.02e}s'.format(g - end_g))
+            end_g = time.perf_counter()
+            print(torch.cuda.memory_allocated(device=device))
+            print(torch.cuda.memory_cached(device=device))
 
         # Log training metrics
         train_loss = running_loss / num_batches
@@ -126,36 +150,3 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
                 break
     return best_loss
 
-
-def make_predictions(data_loader, model, optimizer, model_weights_path):
-    """
-    :param data_loader: an iterator on input data
-    :param model: An empty model
-    :param optimizer: An empty optimizer
-    :param model_weights_path: the path of the model to load
-    :return: list of predictions
-    """
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-    checkpoint = torch.load(model_weights_path, map_location=device)
-    model.load_state_dict(checkpoint['model_state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-    model.eval()
-
-    predictions = []
-
-    for batch_idx, inputs in enumerate(data_loader):
-        inputs = inputs.to(device)
-        predictions.append(model(inputs))
-    return predictions
-
-
-if __name__ == "__main__":
-    pass
-# parser = argparse.ArgumentParser()
-# parser.add_argument('--data_dir', default='../data/testset')
-# parser.add_argument('--out_dir', default='Submissions/')
-# parser.add_argument(
-#     '--model_path', default='results/base_wr_lr01best_model.pth')
-# args = parser.parse_args()
-# make_predictions(args.data_dir, args.out_dir, args.model_path)

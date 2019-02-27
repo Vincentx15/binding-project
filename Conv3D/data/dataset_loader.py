@@ -14,7 +14,7 @@ in the same subset
 '''
 
 
-def get_data(batch_size=64):
+def get_data(batch_size=64, num_gpu=1):
     """
     Get the data Pytorch way
     :param batch_size: int
@@ -37,9 +37,9 @@ def get_data(batch_size=64):
     valid_set = Subset(dataset, valid_indices)
     test_set = Subset(dataset, test_indices)
 
-    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size)
-    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size)
-    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size)
+    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu*4)
+    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu*4)
+    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu*4)
 
     return train_loader, valid_loader, test_loader
 
