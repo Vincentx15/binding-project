@@ -14,14 +14,15 @@ in the same subset
 '''
 
 
-def get_data(batch_size=64, num_gpu=1):
+def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligands/whole_dict_embed_128.p',
+             batch_size=64, num_gpu=1):
     """
     Get the data Pytorch way
     :param batch_size: int
     :return:
     """
 
-    dataset = Conv3DDataset(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligands/whole_dict_embed_128.p')
+    dataset = Conv3DDataset(pocket_path=pocket_path, ligand_path=ligand_path)
 
     n = len(dataset)
     indices = list(range(n))
@@ -37,9 +38,9 @@ def get_data(batch_size=64, num_gpu=1):
     valid_set = Subset(dataset, valid_indices)
     test_set = Subset(dataset, test_indices)
 
-    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu*4)
-    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu*4)
-    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu*4)
+    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu * 4)
+    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu * 4)
+    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu * 4)
 
     return train_loader, valid_loader, test_loader
 

@@ -12,7 +12,7 @@ import argparse
 
 # Homemade modules
 # from data.dataset_loader import get_data
-from data.dataset_loader import get_data
+from data.dataset_loader_ram import get_data
 
 from src.utils import Tensorboard, mkdirs
 import src.timed_learning as learn
@@ -44,8 +44,10 @@ else:
 Dataloader creation
 '''
 
-batch_size = 4
-train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_gpu=used_gpus_count)
+batch_size = 128
+num_workers = 4 * used_gpus_count
+# num_workers = 20
+train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_workers=num_workers)
 
 '''
 Model loading
