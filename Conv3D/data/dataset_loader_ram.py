@@ -23,7 +23,7 @@ def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligan
     pockets_rotations = produce_list_pockets(pocket_path)
     print('number of points in total', len(pockets_rotations))
     a = time.perf_counter()
-    pockets_rotations = pockets_rotations[:15000]
+    pockets_rotations = pockets_rotations
 
     pocket_embeddings = produce_items(pockets_rotations)
 
@@ -49,7 +49,7 @@ def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligan
     valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
     test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
 
-    return dataset, train_loader, valid_loader, test_loader
+    return train_loader, valid_loader, test_loader
 
 
 def rotate(tensor, i):
@@ -110,7 +110,7 @@ def produce_items(pockets_rotations):
     :return:
     """
     pool = mlt.Pool()
-    result = pool.map(f, pockets_rotations)
+    result = pool.map(f, pockets_rotations, chunksize=20)
     return result
 
 
@@ -140,7 +140,7 @@ class Conv3DDatasetRAM(Dataset):
 
 if __name__ == '__main__':
     pass
-    ds, *_ = get_data(pocket_path='pockets/unique_pockets/', ligand_path='ligands/whole_dict_embed_128.p',
-                      batch_size=4, num_workers=10)
-
-    print(ds[5][0].type())
+    # Return the Dataset to debug it in run data
+    # ds, _ = get_data(pocket_path='pockets/unique_pockets/', ligand_path='ligands/whole_dict_embed_128.p',
+    #                   batch_size=4, num_workers=10)
+    # print(ds[5][0].type())

@@ -14,14 +14,17 @@ The software requirements and version are stated in requirements.txt
 ## Data
 Mostly the dataset loader. The data is produced as u8 to get the most 
 compressed representation, so it needs to be cast to floats.
-We use the data alignment to eigen axis.Overall, this aligned 
+We use the data alignment to eigen axis. Overall, this aligned 
 representation enables us to reduce the possible poses of the ligand 
 on the grid, which should improve learning as well as reduce the size
 of the model. The grid size is chosen to keep almost all of the data
-in a (40,30,30) grid. To get all rotation augmentation, we build the explicit
-enumeration of all 2**3 poses * n data points, but the explicit construction
-of the tensor is dealt with on the fly without too high of a time consumption,
-to avoid memory overload.
+in a (40,30,30) grid. To get all rotation augmentation, and get data loading, 
+we offer 3 approaches. We build the explicit enumeration of all 2**3 poses * n 
+data points and then :
+- loader constructs the tensor on the fly without too high of a time consumption,
+to avoid memory overload
+- loader_ram does this as a preprocessing step and loads the whole data on the RAM
+- loader_hard assumes the whole list of input points was created
 
 ## Src
 The training utilities. The logging uses tensorboard and the rest is pure pytorch.

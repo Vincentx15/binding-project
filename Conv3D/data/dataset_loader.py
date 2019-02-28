@@ -15,7 +15,7 @@ in the same subset
 
 
 def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligands/whole_dict_embed_128.p',
-             batch_size=64, num_gpu=1):
+             batch_size=64, num_workers=1):
     """
     Get the data Pytorch way
     :param batch_size: int
@@ -38,9 +38,9 @@ def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligan
     valid_set = Subset(dataset, valid_indices)
     test_set = Subset(dataset, test_indices)
 
-    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu * 4)
-    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu * 4)
-    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_gpu * 4)
+    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
+    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
+    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
 
     return train_loader, valid_loader, test_loader
 
@@ -81,6 +81,10 @@ class Conv3DDataset(Dataset):
         self.pockets = os.listdir(pocket_path)
         self.pockets_rotations = [(pdb, rotation) for pdb in self.pockets for rotation in range(8)]
         self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
+        # Timing
+        self.load = 0
+        self.cast = 0
+        self.rot = 0
 
     def __len__(self):
         return len(self.pockets_rotations)
@@ -98,15 +102,38 @@ class Conv3DDataset(Dataset):
         :param item:
         :return:
         """
-        pdb, rotation = self.pockets_rotations[item]
 
+        pdb, rotation = self.pockets_rotations[item]
+        # a = time.perf_counter()
         pocket_tensor = np.load(self.path + pdb).astype(dtype=np.uint8)
         pocket_tensor = torch.from_numpy(pocket_tensor)
+        # self.load += time.perf_counter() - a
+
+        # a = time.perf_counter()
         pocket_tensor = rotate(pocket_tensor, rotation)
+        # self.rot += time.perf_counter() - a
+
+
+        # a = time.perf_counter()
         pocket_tensor = pocket_tensor.float()
+        # self.cast += time.perf_counter() - a
+
 
         _, ligand_id, *_ = pdb.split('_')
         ligand_embedding = self.ligands_dict[ligand_id]
         ligand_embedding = torch.from_numpy(ligand_embedding)
 
         return pocket_tensor, ligand_embedding
+
+
+if __name__ == '__main__':
+    pass
+    pocket_path='pockets/unique_pockets/'
+    ligand_path='ligands/whole_dict_embed_128.p'
+    dataset = Conv3DDataset(pocket_path=pocket_path, ligand_path=ligand_path)
+    for i in range(500):
+        dataset[i]
+
+    print(dataset.load)
+    print(dataset.cast)
+    print(dataset.rot)

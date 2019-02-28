@@ -8,7 +8,7 @@ import os
 import numpy as np
 import time
 import argparse
-# from torchsummary import summary
+from torchsummary import summary
 
 # Homemade modules
 # from data.dataset_loader import get_data
@@ -88,15 +88,15 @@ writer = Tensorboard(log_folder)
 '''
 Run
 '''
-learn.train_model(model=model,
-                  criterion=criterion,
-                  optimizer=optimizer,
-                  device=device,
-                  train_loader=train_loader,
-                  validation_loader=valid_loader,
-                  save_path=result_folder,
-                  writer=writer,
-                  num_epochs=400)
+# learn.train_model(model=model,
+#                   criterion=criterion,
+#                   optimizer=optimizer,
+#                   device=device,
+#                   train_loader=train_loader,
+#                   validation_loader=valid_loader,
+#                   save_path=result_folder,
+#                   writer=writer,
+#                   num_epochs=400)
 
 '''
 configuration = {
