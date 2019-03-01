@@ -1,3 +1,13 @@
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--parallel", help="decide if we run thing on parallel", action='store_true')
+parser.add_argument("-d", "--data_loading", default='fly', choices=['hard', 'ram', 'fly'],
+                    help="choose the way to load data")
+parser.add_argument("-bs", "--batch_size", type=int, default=128,
+                    help="choose the batch size")
+args = parser.parse_args()
+
 # Torch imports
 import torch
 import torch.optim as optim
@@ -7,30 +17,23 @@ from torch.utils.data import Subset, DataLoader
 import os
 import numpy as np
 import time
-import argparse
 from torchsummary import summary
 
 # Homemade modules
-# from data.dataset_loader import get_data
-from data.dataset_loader_ram import get_data
+if args.data_loading == 'hard':
+    from data.dataset_loader_hard import get_data
+elif args.data_loading == 'ram':
+    from data.dataset_loader_ram import get_data
+else:
+    from data.dataset_loader import get_data
 
 from src.utils import Tensorboard, mkdirs
-import src.timed_learning as learn
+import src.learning as learn
 
 from models.SmallC3D import SmallC3D
-from models.Toy import Toy
-from models.C3D import C3D
 
-
-'''
-How many GPUs are we using and should we use them in parallel ?
-
-Experiments on very large networks seem to show that it is not faster to use several ones
-'''
-parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--parallel", help="decide if we run thing on parallel", action='store_true')
-args = parser.parse_args()
-
+# from models.Toy import Toy
+# from models.C3D import C3D
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -44,9 +47,10 @@ else:
 Dataloader creation
 '''
 
-batch_size = 128
-num_workers = 6 * used_gpus_count
-# num_workers = 20
+# batch_size = 8
+batch_size = args.batch_size
+# num_workers = 6 * used_gpus_count
+num_workers = 20
 train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_workers=num_workers)
 
 '''
@@ -72,7 +76,7 @@ optimizer = optim.Adam(model.parameters())
 '''
 Experiment Setup
 '''
-name = 'Smaller'
+name = 'Smaller_hard'
 log_folder, result_folder = mkdirs(name)
 writer = Tensorboard(log_folder)
 
@@ -88,15 +92,16 @@ writer = Tensorboard(log_folder)
 '''
 Run
 '''
-# learn.train_model(model=model,
-#                   criterion=criterion,
-#                   optimizer=optimizer,
-#                   device=device,
-#                   train_loader=train_loader,
-#                   validation_loader=valid_loader,
-#                   save_path=result_folder,
-#                   writer=writer,
-#                   num_epochs=400)
+learn.train_model(model=model,
+                  criterion=criterion,
+                  optimizer=optimizer,
+                  device=device,
+                  train_loader=train_loader,
+                  validation_loader=valid_loader,
+                  save_path=result_folder,
+                  writer=writer,
+                  num_epochs=400,
+                  wall_time=9)
 
 '''
 configuration = {
