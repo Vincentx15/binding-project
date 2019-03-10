@@ -2,7 +2,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--parallel", help="decide if we run thing on parallel", action='store_true')
-parser.add_argument("-d", "--data_loading", default='fly', choices=['hard', 'ram', 'fly'],
+parser.add_argument("-d", "--data_loading", default='fly', choices=['hard', 'ram', 'fly', 'hram'],
                     help="choose the way to load data")
 parser.add_argument("-bs", "--batch_size", type=int, default=128,
                     help="choose the batch size")
@@ -24,6 +24,8 @@ if args.data_loading == 'hard':
     from data.dataset_loader_hard import get_data
 elif args.data_loading == 'ram':
     from data.dataset_loader_ram import get_data
+elif args.data_loading == 'hram':
+    from data.dataset_loader_hardram import get_data
 else:
     from data.dataset_loader import get_data
 
@@ -43,6 +45,8 @@ if args.parallel:
 else:
     used_gpus_count = 1
 
+print('Done importing')
+
 '''
 Dataloader creation
 '''
@@ -52,6 +56,8 @@ batch_size = args.batch_size
 # num_workers = 6 * used_gpus_count
 num_workers = 20
 train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_workers=num_workers)
+print('Created data loader')
+
 
 '''
 Model loading

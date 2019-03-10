@@ -12,21 +12,22 @@ Data creation could preexist and is currently the bottleneck for the gpu, so try
 '''
 
 
-def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligands/whole_dict_embed_128.p',
+def get_data(pocket_path='data/pockets/unique_pockets_hard/', ligand_path='data/ligands/whole_dict_embed_128.p',
              batch_size=64, num_workers=1):
     """
     Get the data Pytorch way
     :param batch_size: int
     :return:
     """
-    # Prepare ligands and pockets in RAM
-    ligands_dict = pickle.load(open(ligand_path, 'rb'))
-    pockets_rotations = produce_list_pockets(pocket_path)
 
-    pocket_embeddings = produce_items(pockets_rotations)
-    dataset = Conv3DDatasetRAM(ligands_dict=ligands_dict,
-                               pockets_rotations=pockets_rotations,
-                               pocket_embeddings=pocket_embeddings)
+    ligands_dict = pickle.load(open(ligand_path, 'rb'))
+    pockets = os.listdir(pocket_path)
+    pockets_path = [pocket_path + pocket for pocket in pockets]
+    pocket_embeddings = produce_items(pockets_path)
+
+    dataset = Conv3DDatasetHardRAM(ligands_dict=ligands_dict, pockets=pockets,
+                                   pocket_embeddings=pocket_embeddings)
+
     n = len(dataset)
     indices = list(range(n))
     np.random.seed(0)
@@ -48,86 +49,49 @@ def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligan
     return train_loader, valid_loader, test_loader
 
 
-def rotate(tensor, i):
-    """
-    :param tensor: the tensor to rotate, a pytorch tensor
-    :param i: integer between 0 and 7 the rotation is encoded as follow 7 in base 2 return a4 + b2 + c1 with abc
-    indicating the presence of a rotation eg : 6 = 4 + 2 = 110 so it represents the flip along the first two axis
-    :return: flipped tensor
-    """
-    if i == 0:
-        return tensor
-    assert -1 < i < 8
-    axes = []
-    if i >= 4:
-        axes.append(1)
-        i -= 4
-    if i >= 2:
-        axes.append(2)
-        i -= 2
-    if i > 0:
-        axes.append(3)
-    tensor = torch.flip(tensor, dims=axes)
-    return tensor
-
-
-# a = np.array([[1, 2], [3, 4], [5, 6]])
-# a = np.flip(a, axis=0)
-# print(a)
-# rotate(np.random.rand(2, 2, 2, 2), 5)
-
 """ 
 Has to be outside f the class to be callable by multiprocessing.Pool
 """
 
 
-def produce_list_pockets(path):
-    """
-    Produce the list of ordered rotations with their path, to be called by the pool
-    :param path:
-    :return:
-    """
-    pockets_rotations = [(path + pdb, rotation) for pdb in os.listdir(path) for rotation in range(8)]
-    return pockets_rotations
-
-
 def f(x):
-    path_to_pdb, rotation = x
+    path_to_pdb = x
     pocket_tensor = np.load(path_to_pdb).astype(dtype=np.uint8)
     pocket_tensor = torch.from_numpy(pocket_tensor)
-    pocket_tensor = rotate(pocket_tensor, rotation)
     pocket_tensor = pocket_tensor.float()
     return pocket_tensor
 
 
-def produce_items(pockets_rotations):
+def produce_items(pockets):
     """
     produces a list of tensor in RAM so that it can be accessed directly by get item
     :return:
     """
     pool = mlt.Pool()
-    result = pool.map(f, pockets_rotations, chunksize=20)
+    result = pool.map(f, pockets, chunksize=20)
     return result
 
 
-class Conv3DDatasetRAM(Dataset):
+class Conv3DDatasetHardRAM(Dataset):
 
-    def __init__(self, ligands_dict, pockets_rotations, pocket_embeddings):
-        self.ligands_dict = ligands_dict
-        self.pockets_rotations = pockets_rotations
+    def __init__(self, ligands_dict, pockets, pocket_embeddings):
+        self.pockets = pockets
         self.pocket_embeddings = pocket_embeddings
+        self.ligands_dict = ligands_dict
 
     def __len__(self):
-        return len(self.pockets_rotations)
+        return len(self.pockets)
 
     def __getitem__(self, item):
         """
         :param item:
         :return:
         """
+
+        pdb = self.pockets[item]
+
         pocket_tensor = self.pocket_embeddings[item]
 
-        pdb, rotation = self.pockets_rotations[item]
         *_, ligand_id, _ = pdb.split('_')
         ligand_embedding = self.ligands_dict[ligand_id]
         ligand_embedding = torch.from_numpy(ligand_embedding)
