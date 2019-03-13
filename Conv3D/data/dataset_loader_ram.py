@@ -105,8 +105,11 @@ def produce_items(pockets_rotations):
     produces a list of tensor in RAM so that it can be accessed directly by get item
     :return:
     """
+    # Parallel way
     pool = mlt.Pool()
     result = pool.map(f, pockets_rotations, chunksize=20)
+
+
     return result
 
 

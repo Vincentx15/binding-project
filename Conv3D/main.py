@@ -37,6 +37,8 @@ from models.SmallC3D import SmallC3D
 # from models.Toy import Toy
 # from models.C3D import C3D
 
+
+torch.multiprocessing.set_sharing_strategy('file_system')
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # This is to create an appropriate number of workers, but works too with cpu
@@ -51,8 +53,8 @@ print('Done importing')
 Dataloader creation
 '''
 
-# batch_size = 8
-batch_size = args.batch_size
+batch_size = 8
+# batch_size = args.batch_size
 # num_workers = 6 * used_gpus_count
 num_workers = 20
 train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_workers=num_workers)

@@ -35,9 +35,9 @@ def get_data(pocket_path='data/pockets/unique_pockets_hard/', ligand_path='data/
     valid_set = Subset(dataset, valid_indices)
     test_set = Subset(dataset, test_indices)
 
-    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
-    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
-    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
+    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_workers, pin_memory=True)
+    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_workers, pin_memory=True)
+    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_workers, pin_memory=True)
 
     return train_loader, valid_loader, test_loader
 

@@ -83,8 +83,8 @@ class Tensorboard:
         img_ar = np.array(img)
 
         img_summary = Summary.Image(encoded_image_string=plot_buf.getvalue(),
-                                       height=img_ar.shape[0],
-                                       width=img_ar.shape[1])
+                                    height=img_ar.shape[0],
+                                    width=img_ar.shape[1])
 
         summary = Summary()
         summary.value.add(tag=tag, image=img_summary)
@@ -113,3 +113,56 @@ def debug_memory():
                                   if torch.is_tensor(o))
     for line in sorted(tensors.items()):
         print('{}\t{}'.format(*line))
+
+
+def ES(labels, pred, true, threshold):
+    """
+    Enrichment score : computes the distance from predicted label to all labels and return ind(is in the predicted set)
+    :param labels:  dict ligand_name, embedding
+    :param pred: a vector embedding corresponding to the goo one
+    :param true: true ligand name (pdb_id)
+    :param threshold: the size of the shortlist
+    :return:
+    """
+    res = sorted([(np.linalg.norm(pred - embedding), embedding) for embedding in labels.values()], key=lambda x: x[0])
+
+    # Get a list of embeddings
+    shortlist = res[:threshold]
+    shortlist = list(zip(*shortlist))[1]
+
+    res = [np.linalg.norm(true - embedding) for embedding in shortlist]
+    bingo = np.min(res) == 0
+    return int(bingo)
+
+
+def ES_batch(labels, preds, trues, threshold):
+    """
+
+    :param labels:
+    :param pred:
+    :param true:
+    :param threshold:
+    :return:
+    """
+    score = 0
+    for pred, true in zip(preds, trues):
+        score += ES(labels, pred, true, threshold=threshold)
+    return score
+
+
+if __name__ == '__main__':
+    pass
+    import pickle
+
+    labels = pickle.load(open('../data/ligands/whole_dict_embed_128.p', 'rb'))
+    trues = list(labels.values())[:128]
+    preds = list(labels.values())
+    np.random.shuffle(preds)
+    preds = preds[:128]
+
+    score = ES_batch(labels, preds, trues, 50)
+    print(score)
+# for key, value in labels.items():
+#     tensor = torch.from_numpy(value)
+#     labels[key] = tensor
+#     tensor.requires_grad = False

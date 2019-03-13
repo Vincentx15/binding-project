@@ -1,9 +1,9 @@
-from torch.utils.data.dataset import Dataset
 import torch
 import numpy as np
 import pickle
 import os
 import time
+from torch.utils.data.dataset import Dataset
 from torch.utils.data import Subset, DataLoader
 
 '''
@@ -38,9 +38,9 @@ def get_data(pocket_path='data/pockets/unique_pockets/', ligand_path='data/ligan
     valid_set = Subset(dataset, valid_indices)
     test_set = Subset(dataset, test_indices)
 
-    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
-    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
-    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_workers)
+    train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=batch_size, num_workers=num_workers, pin_memory=True)
+    valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=batch_size, num_workers=num_workers, pin_memory=True)
+    test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=batch_size, num_workers=num_workers, pin_memory=True)
 
     return train_loader, valid_loader, test_loader
 

@@ -59,32 +59,24 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
         model.train()
 
         running_loss = 0.0
+        ttot = time.perf_counter()
 
-        end_g = 0
         num_batches = len(train_loader)
         for batch_idx, (inputs, labels) in enumerate(train_loader):
+            tloop = time.perf_counter()
+
             batch_size = len(inputs)
 
-            start_loop = time.perf_counter()
+            t3 = time.perf_counter()
             inputs, labels = inputs.to(device), labels.to(device)
             torch.cuda.synchronize()  # wait for mm to finish
-            b = time.perf_counter() - start_loop
-            print('send_data {:.02e}s'.format(b))
+            t3 = time.perf_counter() - t3
+            print('send_data {:.02e}s'.format(t3))
 
-            a = time.perf_counter()
+            t2 = time.perf_counter()
             out = model(inputs)
-            torch.cuda.synchronize()  # wait for mm to finish
-            c = time.perf_counter() - a
-            print('forward {:.02e}s'.format(c))
-
             loss = criterion(out, labels)
-
-            a = time.perf_counter()
             loss.backward()
-
-            torch.cuda.synchronize()  # wait for mm to finish
-            e = time.perf_counter() - a
-            print('Backward {:.02e}s'.format(e))
 
             optimizer.step()
             optimizer.zero_grad()
@@ -105,10 +97,18 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
                 writer.log_scalar("Training loss", loss.item(),
                                   epoch * num_batches + batch_idx)
 
-            g = time.perf_counter()
-            print('Loop total {:.02e}s'.format(g - start_loop))
-            print('Loop total with for {:.02e}s'.format(g - end_g))
-            end_g = time.perf_counter()
+            torch.cuda.synchronize()  # wait for mm to finish
+            t2 = time.perf_counter() - t2
+            print('Computation {:.02e}s'.format(t2))
+
+            tloop = time.perf_counter() - tloop
+            print('send_data {:.02e}s'.format(tloop))
+
+            # Max (t2+t3), t1
+            ttot = time.perf_counter() - ttot
+            print('Total time {:.02e}s'.format(ttot))
+            ttot = time.perf_counter()
+
             print(torch.cuda.memory_allocated(device=device))
             print(torch.cuda.memory_cached(device=device))
 

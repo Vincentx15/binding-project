@@ -1,7 +1,8 @@
 import time
 import torch
 import sys
-from src.utils import debug_memory
+from src.utils import debug_memory, ES
+import pickle
 
 
 def test(model, test_loader, test_loss_fn, device):
@@ -14,18 +15,29 @@ def test(model, test_loader, test_loss_fn, device):
     :return:
     """
     model.eval()
-
+    labels = pickle.load(open('data/ligands/whole_dict_embed_128.p', 'rb'))
+    # for key, value in labels.items():
+    #     tensor = torch.from_numpy(value)
+    #     labels[key] = tensor
+    #     tensor.requires_grad = False
     test_loss = 0
     test_size = 0
+    test_accuracy = 0
     for batch_idx, (inputs, targets) in enumerate(test_loader):
-        inputs, targets = inputs.to(device), targets.to(device)
-        output = model(inputs)
-        test_size += len(inputs)
-        test_loss += test_loss_fn(output, targets).item()
-        if not batch_idx % 50 :
+        inputs_gpu, targets_gpu = inputs.to(device), targets.to(device)
+        output = model(inputs_gpu)
+        test_size += len(inputs_gpu)
+        test_loss += test_loss_fn(output, targets_gpu).item()
+        cpu_output = output.detach().cpu()
+
+        for output, true in zip(cpu_output, targets):
+            test_accuracy += ES(labels, output, true, threshold=10)
+
+        if not batch_idx % 50:
             print('Computed {:.2f} batches for the test'.format(batch_idx))
     test_loss /= test_size
-    return test_loss
+    test_accuracy /= test_size
+    return test_loss, test_accuracy
 
 
 def train_model(model, criterion, optimizer, device, train_loader, validation_loader, save_path,
@@ -96,9 +108,9 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
         # writer.log_scalar("Train accuracy during training", train_accuracy, epoch)
 
         # Test phase
-        test_loss = test(model, validation_loader, criterion, device)
+        test_loss, test_accuracy = test(model, validation_loader, criterion, device)
         writer.log_scalar("Test loss during training", test_loss, epoch)
-        # writer.log_scalar("Test accuracy during training", test_accuracy, epoch)
+        writer.log_scalar("Test accuracy during training", test_accuracy, epoch)
 
         # Checkpointing
         if test_loss < best_loss:

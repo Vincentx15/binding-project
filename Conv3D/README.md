@@ -24,7 +24,9 @@ data points and then :
 - loader constructs the tensor on the fly without too high of a time consumption,
 to avoid memory overload
 - loader_ram does this as a preprocessing step and loads the whole data on the RAM
-- loader_hard assumes the whole list of input points was created
+- loader_hard assumes the whole list of input points was preprocessed and saved, so it
+just loads them
+- loader_hard_ram does the same as loader_hard but saves the result in the RAM
 
 ## Src
 The training utilities. The logging uses tensorboard and the rest is pure pytorch.
