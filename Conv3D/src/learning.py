@@ -40,7 +40,7 @@ def test(model, test_loader, test_loss_fn, device):
     return test_loss, test_accuracy
 
 
-def train_model(model, criterion, optimizer, device, train_loader, validation_loader, save_path,
+def train_model(model, criterion, optimizer, device, train_loader, test_loader, save_path,
                 writer=None, num_epochs=25, wall_time=None):
     """
     Performs the entire training routine.
@@ -108,7 +108,7 @@ def train_model(model, criterion, optimizer, device, train_loader, validation_lo
         # writer.log_scalar("Train accuracy during training", train_accuracy, epoch)
 
         # Test phase
-        test_loss, test_accuracy = test(model, validation_loader, criterion, device)
+        test_loss, test_accuracy = test(model, test_loader, criterion, device)
         writer.log_scalar("Test loss during training", test_loss, epoch)
         writer.log_scalar("Test accuracy during training", test_accuracy, epoch)
 

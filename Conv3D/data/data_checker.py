@@ -26,9 +26,6 @@ The checking is the same for the two because it is not the rotation process that
 """
 
 
-# TODO : is it?
-
-
 # HARD CHECK, can we open all files with the correct shape?
 
 def find_faulty_batch(pocket_path='pockets/unique_pockets/'):

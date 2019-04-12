@@ -49,10 +49,10 @@ def make_hard_enumeration_serial(start_index=0, end_index=-1):
     path = 'pockets/unique_pockets/'
     out_path = 'pockets/unique_pockets_hard/'
 
-    try:
-        os.mkdir(out_path)
-    except FileExistsError:
-        raise ValueError('This name is already taken !')
+    # try:
+    #     os.mkdir(out_path)
+    # except FileExistsError:
+    #     raise ValueError('This name is already taken !')
 
     inputs = [(out_path, path, pdb) for pdb in os.listdir(path)[start_index:end_index]]
     for i, path in enumerate(inputs):
@@ -92,6 +92,7 @@ def rotate(tensor, i):
     indicating the presence of a rotation eg : 6 = 4 + 2 = 110 so it represents the flip along the first two axis
     :return: flipped tensor
     """
+
     if i == 0:
         return tensor
     assert -1 < i < 8

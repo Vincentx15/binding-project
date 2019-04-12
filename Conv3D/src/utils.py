@@ -92,16 +92,21 @@ class Tensorboard:
         self.writer.flush()
 
 
-def mkdirs(name):
-    # Try to make the logs folder but return error if already exist to avoid overwriting a model
-    log_path = os.path.join('logs/', name)
+def mkdirs(name, permissive=True):
+    """
+    Try to make the logs folder
+    :param name:
+    :param permissive: If True will overwrite existing files (good for debugging)
+    :return:
+    """
+    log_path = os.path.join('logs', name)
     save_path = os.path.join('trained_models', name)
     try:
         os.mkdir(log_path)
         os.mkdir(save_path)
     except FileExistsError:
-        pass
-        # raise ValueError('This name is already taken !')
+        if not permissive:
+            raise ValueError('This name is already taken !')
     save_name = os.path.join(save_path, name + '.pth')
     return log_path, save_name
 
@@ -137,7 +142,6 @@ def ES(labels, pred, true, threshold):
 
 def ES_batch(labels, preds, trues, threshold):
     """
-
     :param labels:
     :param pred:
     :param true:
@@ -162,7 +166,7 @@ if __name__ == '__main__':
 
     score = ES_batch(labels, preds, trues, 50)
     print(score)
-# for key, value in labels.items():
-#     tensor = torch.from_numpy(value)
-#     labels[key] = tensor
-#     tensor.requires_grad = False
+    # for key, value in labels.items():
+    #     tensor = torch.from_numpy(value)
+    #     labels[key] = tensor
+    #     tensor.requires_grad = False

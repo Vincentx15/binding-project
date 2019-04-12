@@ -2,7 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="69b245ca-af03-4f5d-ba19-503fe4be4bd5" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/../Conv3D/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Conv3D/data/loader.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Conv3D/src/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/data/data_checker.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/data/data_checker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/data/data_preprocessor.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/data/data_preprocessor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/data/dataset_loader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/data/dataset_loader_hard.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/data/dataset_loader_hardram.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/data/dataset_loader_ram.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/src/learning.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/src/learning.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Conv3D/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/src/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -102,10 +113,13 @@
     <session id="-205252545">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
-          <entry key="project.open.time.0" value="1" />
+          <entry key="project.closed" value="3" />
+          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.2" value="1" />
+          <entry key="project.open.time.22" value="1" />
+          <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.opened" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -115,14 +129,14 @@
           <entry key="md" value="2" />
           <entry key="output" value="1" />
           <entry key="pdb" value="1" />
-          <entry key="py" value="16" />
+          <entry key="py" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Markdown" value="2" />
           <entry key="PLAIN_TEXT" value="7" />
-          <entry key="Python" value="16" />
+          <entry key="Python" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -143,11 +157,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shape/data_preprocessor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2934">
-              <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
+            <state relative-caret-position="407">
+              <caret line="143" selection-start-line="143" selection-end-line="143" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -156,10 +170,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/shape/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tools/ligands_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-403">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="108">
+              <caret line="8" selection-start-line="8" selection-end-line="8" />
               <folding>
                 <element signature="e#89#98#0" expanded="true" />
               </folding>
@@ -167,11 +190,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tools/name_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="14" column="8" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="8" />
+            <state relative-caret-position="270">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -182,7 +205,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/trash_code.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
+            <state relative-caret-position="360">
               <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -292,6 +315,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -299,11 +323,25 @@
               <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
               <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
+              <item name="shape" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="protein_binding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="protein_binding" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -331,7 +369,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.trash_code">
+  <component name="RunManager" selected="Python.data_preprocessor">
     <configuration name="UFSRPCAT" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="protein_binding" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -462,8 +500,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.trash_code" />
         <item itemvalue="Python.data_preprocessor" />
+        <item itemvalue="Python.trash_code" />
         <item itemvalue="Python.name_parser" />
         <item itemvalue="Python.UFSRPCAT" />
         <item itemvalue="Python.main" />
@@ -485,13 +523,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16885246" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16885246" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32924336" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32864866" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32864866" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -631,8 +670,8 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/output_csv/usfr_whole.csv">
-      <provider selected="true" editor-type-id="LargeFileEditor" />
       <provider editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="LargeFileEditor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/data/output_csv/test.csv">
       <provider selected="true" editor-type-id="text-editor">
@@ -695,19 +734,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shape/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/no_duplicate/output">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/data/output_pdb/sample/no_duplicate/output" />
     <entry file="file://$PROJECT_DIR$/graph/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
@@ -716,39 +743,33 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/tensor/log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/tensor/log">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
           <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/trash_code.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shape/data_preprocessor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2934">
-          <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
+        <state relative-caret-position="407">
+          <caret line="143" selection-start-line="143" selection-end-line="143" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/shape/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tools/ligands_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-403">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="108">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
           <folding>
             <element signature="e#89#98#0" expanded="true" />
           </folding>
@@ -757,10 +778,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tools/name_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="14" column="8" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="8" />
+        <state relative-caret-position="270">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trash_code.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>

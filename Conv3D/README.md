@@ -11,6 +11,13 @@ obtained in the cddd subproject.
 
 The software requirements and version are stated in requirements.txt
 
+##Setup
+Mostly data to retrieve. It should be available for download or contact the authors.
+The data must be saved in pockets/unique_pockets (resp unique_pockets_hard) and the
+ligand file should be saved in ligands/whole_dict_embed_128.p
+Then the environment should be created either as a conda environment or running the setup
+script. Then the main.py can be run with a few options
+
 ## Data
 Mostly the dataset loader. The data is produced as u8 to get the most 
 compressed representation, so it needs to be cast to floats.
