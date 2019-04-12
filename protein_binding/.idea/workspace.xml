@@ -2,18 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="69b245ca-af03-4f5d-ba19-503fe4be4bd5" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/../Conv3D/data/loader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Conv3D/src/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Conv3D/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Conv3D/data/data_checker.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/data/data_checker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Conv3D/data/data_preprocessor.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/data/data_preprocessor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Conv3D/data/dataset_loader.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Conv3D/data/dataset_loader_hard.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Conv3D/data/dataset_loader_hardram.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Conv3D/data/dataset_loader_ram.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Conv3D/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Conv3D/src/learning.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/src/learning.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Conv3D/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Conv3D/src/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

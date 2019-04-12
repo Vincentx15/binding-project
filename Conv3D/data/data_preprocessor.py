@@ -3,15 +3,30 @@ import os
 import time
 import multiprocessing as mlt
 import numpy as np
+import pickle
 import csv
+
 from data.utils import write_error_log
 
+import torch
+from torch.utils.data.dataset import Dataset
+from torch.utils.data import DataLoader
 
-def remove_duplicates():
-    # Script to remove duplicates : pockets from the same pdb, that have the same ligand
+"""
+Script to :
+- Remove duplicates
+- Check the data
+- Create an augmented dataset
+"""
 
-    src_dir = 'pockets/whole'
-    dst_dir = 'pockets/unique_pockets'
+
+def remove_duplicates(src_dir='pockets/whole', dst_dir='pockets/unique_pockets'):
+    """
+    Script to remove duplicates : pockets from the same pdb, that have the same ligand
+    :param src_dir:
+    :param dst_dir:
+    :return:
+    """
     os.mkdir(dst_dir)
 
     seen = set()
@@ -26,63 +41,6 @@ def remove_duplicates():
             seen.add((pdb, ligand))
         if not i % 1000:
             print(i)
-
-
-def make_hard_enumeration():
-    path = 'pockets/unique_pockets/'
-    out_path = 'pockets/unique_pockets_hard/'
-
-    try:
-        os.mkdir(out_path)
-    except FileExistsError:
-        raise ValueError('This name is already taken !')
-
-    a = time.perf_counter()
-    inputs = [(out_path, path, pdb) for pdb in os.listdir(path)]
-
-    pool = mlt.Pool()
-    pool.map(f, inputs, chunksize=20)
-    print('Done in : ', time.perf_counter() - a)
-
-
-def make_hard_enumeration_serial(start_index=0, end_index=-1):
-    path = 'pockets/unique_pockets/'
-    out_path = 'pockets/unique_pockets_hard/'
-
-    # try:
-    #     os.mkdir(out_path)
-    # except FileExistsError:
-    #     raise ValueError('This name is already taken !')
-
-    inputs = [(out_path, path, pdb) for pdb in os.listdir(path)[start_index:end_index]]
-    for i, path in enumerate(inputs):
-        try:
-            f(path)
-        except:
-            write_error_log(path)
-        if not i % 1000:
-            print(i)
-
-
-def f(x):
-    """
-    :param x: path , pdb form
-    :return:
-    """
-    out_path, path, pdb = x
-    try:
-        path_to_pdb = path + pdb
-        pdb_id, ligand_id, *_ = pdb.split('_')
-        pocket_tensor = np.load(path_to_pdb).astype(dtype=np.uint8)
-        # To debug
-        # pocket_tensor = np.random.rand(2, 2, 2, 2)
-
-        for rotation in range(8):
-            pocket_tensor_rotated = rotate(pocket_tensor, rotation)
-            save_path = os.path.join(out_path, pdb_id + '_' + ligand_id + '_' + str(rotation))
-            np.save(save_path, pocket_tensor_rotated)
-    except:
-        write_error_log(pdb, csv_file='failed_hard.csv')
 
 
 def rotate(tensor, i):
@@ -109,12 +67,165 @@ def rotate(tensor, i):
     return tensor_flipped
 
 
+def augment_data(x):
+    """
+    :param x: path , pdb form
+    :return:
+    """
+    out_path, path, pdb = x
+    try:
+        path_to_pdb = path + pdb
+        pdb_id, ligand_id, *_ = pdb.split('_')
+        pocket_tensor = np.load(path_to_pdb).astype(dtype=np.uint8)
+        # To debug
+        # pocket_tensor = np.random.rand(2, 2, 2, 2)
 
+        for rotation in range(8):
+            pocket_tensor_rotated = rotate(pocket_tensor, rotation)
+            save_path = os.path.join(out_path, pdb_id + '_' + ligand_id + '_' + str(rotation))
+            np.save(save_path, pocket_tensor_rotated)
+    except:
+        write_error_log(pdb, csv_file='failed_hard.csv')
+
+
+def make_hard_enumeration(path='pockets/unique_pockets/', out_path='pockets/unique_pockets_hard/'):
+    try:
+        os.mkdir(out_path)
+    except FileExistsError:
+        raise ValueError('This name is already taken !')
+
+    a = time.perf_counter()
+    inputs = [(out_path, path, pdb) for pdb in os.listdir(path)]
+
+    pool = mlt.Pool()
+    pool.map(augment_data, inputs, chunksize=20)
+    print('Done in : ', time.perf_counter() - a)
+
+
+def make_hard_enumeration_serial(start_index=0, end_index=-1):
+    path = 'pockets/unique_pockets/'
+    out_path = 'pockets/unique_pockets_hard/'
+
+    # try:
+    #     os.mkdir(out_path)
+    # except FileExistsError:
+    #     raise ValueError('This name is already taken !')
+
+    inputs = [(out_path, path, pdb) for pdb in os.listdir(path)[start_index:end_index]]
+    for i, path in enumerate(inputs):
+        try:
+            augment_data(path)
+        except:
+            write_error_log(path)
+        if not i % 1000:
+            print(i)
+
+
+torch.multiprocessing.set_sharing_strategy('file_system')
+
+
+class Conv3DDatasetHardCheck(Dataset):
+    """
+    Read data and if it fails, correct it
+    """
+
+    def __init__(self, pocket_path, ligand_path, augment_flips, shape=(4, 42, 32, 32)):
+        self.path = pocket_path
+        self.shape = shape
+        self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
+        self.augment_flips = augment_flips
+        self.pockets = os.listdir(pocket_path)
+        if self.augment_flips:
+            self.pockets_rotations = [(pdb, rotation) for pdb in self.pockets for rotation in range(8)]
+
+    def __len__(self):
+        if self.augment_flips:
+            return len(self.pockets_rotations)
+        return len(self.pockets)
+
+    def __getitem__(self, item):
+        """
+        :param item:
+        :return:
+        """
+        if self.augment_flips:
+            try:
+                pdb, rotation = self.pockets_rotations[item]
+                pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
+                pocket_tensor = torch.from_numpy(pocket_tensor)
+                pocket_tensor = pocket_tensor.float()
+                if pocket_tensor.shape != self.shape:
+                    write_error_log(pdb, csv_file='wrong_shape.csv')
+            except:
+                pocket_tensor = torch.zeros(self.shape)
+                write_error_log(pdb, 'failed.csv')
+
+        else:
+            try:
+                pdb = self.pockets[item]
+                # a = time.perf_counter()
+                pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
+                pocket_tensor = torch.from_numpy(pocket_tensor)
+                # self.cast += time.perf_counter() - a
+            except:
+                pocket_tensor = torch.zeros(self.shape, dtype=torch.uint8)
+                write_error_log(pdb, 'failed.csv')
+
+        _, ligand_id, *_ = pdb.split('_')
+        ligand_embedding = self.ligands_dict[ligand_id]
+        ligand_embedding = torch.from_numpy(ligand_embedding)
+
+        return pocket_tensor, ligand_embedding
+
+
+def check_data_load(pocket_path='pockets/unique_pockets/', ligand_path='ligands/whole_dict_embed_128.p',
+                    augment_flips=False):
+    """
+    Leverage Pytorch fast iteration with nice traceback to check the dataset fast
+    :param pocket_path:
+    :param ligand_path:
+    :param augment_flips:
+    :return:
+    """
+    num_workers = 20
+    batch_size = 64
+
+    print('Creation : ')
+    a = time.perf_counter()
+
+    dataset = Conv3DDatasetHardCheck(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips)
+    train_loader = DataLoader(dataset=dataset, batch_size=batch_size, num_workers=num_workers)
+
+    print('Done in : ', time.perf_counter() - a)
+    print()
+
+    print('Use : ')
+    a = time.perf_counter()
+
+    for batch_idx, _ in enumerate(train_loader):
+        if not batch_idx % 20:
+            print(batch_idx, time.perf_counter() - a)
+            a = time.perf_counter()
+    print('Done in : ', time.perf_counter() - a)
+
+
+def remove_faulty_from_csv(directory, csv_path):
+    """
+    Use the previous screening to remove pdb that don't behave
+    :param directory: path of the directory to remove
+    :param csv: path of the csv to read
+    :return:
+    """
+    with open(csv_path, "r") as csv_file:
+        reader = csv.reader(csv_file)
+        for pdb in reader:
+            os.remove(os.path.join(directory, pdb[0]))
 
 
 if __name__ == '__main__':
     pass
-    # x = 'pockets/unique_pockets_hard/', 'pockets/unique_pockets/', '1bbo_ABA_36.pdb.npy'
-    # f(x)
-    # make_hard_enumeration()
-    make_hard_enumeration_serial()
+    # remove_duplicates()
+    check_data_load('pockets/unaligned')
+    # make_hard_enumeration(path='pockets/unaligned', out_path='unaligned_hard')
+    # check_data_load('pockets/unaligned')
+    # remove_faulty_from_csv('pockets/unaligned', 'failed.csv')

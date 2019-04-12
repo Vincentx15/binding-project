@@ -155,3 +155,24 @@ Dataloader creation
 # num_workers = 20
 # train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_workers=num_workers)
 # print('Created data loader')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
