@@ -73,8 +73,8 @@ else:
     raise ValueError('Not implemented this DataLoader yet')
 
 
-batch_size = 4
-# batch_size = args.batch_size
+# batch_size = 4
+batch_size = args.batch_size
 num_workers = args.workers
 
 loader = Loader(pocket_path=pocket_path, ligand_path='data/ligands/whole_dict_embed_128.p',
