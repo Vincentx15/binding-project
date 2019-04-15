@@ -223,16 +223,18 @@ class Conv3DDatasetRam(Dataset):
 if __name__ == '__main__':
     import time
 
-    batch_size = 8
+    batch_size = 4
     num_workers = 1
     print('Creation : ')
     a = time.perf_counter()
     loader = Loader(pocket_path='pockets/unique_pockets_hard', ligand_path='ligands/whole_dict_embed_128.p',
                     batch_size=batch_size, num_workers=num_workers, augment_flips=False, ram=True)
+    print(len(loader.dataset))
     train_loader, _, test_loader = loader.get_data()
 
     print('Done in : ', time.perf_counter() - a)
     print()
+
 
     print('Use : ')
     a = time.perf_counter()

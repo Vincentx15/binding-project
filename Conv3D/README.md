@@ -16,24 +16,20 @@ Mostly data to retrieve. It should be available for download or contact the auth
 The data must be saved in pockets/unique_pockets (resp unique_pockets_hard) and the
 ligand file should be saved in ligands/whole_dict_embed_128.p
 Then the environment should be created either as a conda environment or running the setup
-script. Then the main.py can be run with a few options
+script. Then the main.py can be run with a few options 'man main.py' for help.
 
 ## Data
 Mostly the dataset loader. The data is produced as u8 to get the most 
 compressed representation, so it needs to be cast to floats.
-We use the data alignment to eigen axis. Overall, this aligned 
+We use the data alignment to eigen axis in 'unique_pockets' . Overall, this aligned 
 representation enables us to reduce the possible poses of the ligand 
 on the grid, which should improve learning as well as reduce the size
 of the model. The grid size is chosen to keep almost all of the data
 in a (40,30,30) grid. To get all rotation augmentation, and get data loading, 
 we offer 3 approaches. We build the explicit enumeration of all 2**3 poses * n 
-data points and then :
-- loader constructs the tensor on the fly without too high of a time consumption,
-to avoid memory overload
-- loader_ram does this as a preprocessing step and loads the whole data on the RAM
-- loader_hard assumes the whole list of input points was preprocessed and saved, so it
-just loads them
-- loader_hard_ram does the same as loader_hard but saves the result in the RAM
+data points and then the loader can 
+- construct the tensor on the fly or load the whole data on the RAM (argument : ram)
+- Do some data augmentation or just load a pre-processed dataset (argument : augment_flip)
 
 ## Src
 The training utilities. The logging uses tensorboard and the rest is pure pytorch.

@@ -74,7 +74,7 @@ def augment_data(x):
     """
     out_path, path, pdb = x
     try:
-        path_to_pdb = path + pdb
+        path_to_pdb = os.path.join(path, pdb)
         pdb_id, ligand_id, *_ = pdb.split('_')
         pocket_tensor = np.load(path_to_pdb).astype(dtype=np.uint8)
         # To debug

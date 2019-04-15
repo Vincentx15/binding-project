@@ -1,12 +1,15 @@
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--parallel", help="decide if we run thing on parallel", action='store_true')
+parser.add_argument("-p", "--parallel", default=True, help="decide if we run thing on parallel", action='store_true')
 parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
                     help="choose the way to load data")
+parser.add_argument("-po", "--pockets", default='unique_pockets',
+                    choices=['unique_pockets', 'unaligned', 'unaligned', 'unaligned_hard'],
+                    help="choose the data to use for the pocket inputs")
 parser.add_argument("-bs", "--batch_size", type=int, default=128,
                     help="choose the batch size")
-parser.add_argument("-nw", "--workers", type=int, default=24,
+parser.add_argument("-nw", "--workers", type=int, default=20,
                     help="Number of workers to load data")
 parser.add_argument("-n", "--name", type=str, default='default_name',
                     help="Name for the logs")
@@ -17,6 +20,8 @@ import torch
 import torch.optim as optim
 
 import time
+import os
+
 
 # Homemade modules
 from src.utils import Tensorboard, mkdirs
@@ -47,26 +52,29 @@ print('Done importing')
 Dataloader creation
 '''
 
+pocket_file = 'data/pockets/'
+pocket_data = args.pockets
+pocket_path = os.path.join(pocket_file, pocket_data)
+print(f'Using {pocket_path} as the pocket inputs')
+
 if args.data_loading == 'fly':
     augment_flips = True
     ram = False
-    pocket_path = 'data/pockets/unique_pockets'
 elif args.data_loading == 'hard':
     augment_flips = False
     ram = False
-    pocket_path = 'data/pockets/unique_pockets_hard'
 elif args.data_loading == 'ram':
     augment_flips = True
     ram = True
-    pocket_path = 'data/pockets/unique_pockets'
 elif args.data_loading == 'hram':
     augment_flips = False
     ram = True
-    pocket_path = 'data/pockets/unique_pockets_hard'
 else:
     raise ValueError('Not implemented this DataLoader yet')
 
-batch_size = args.batch_size
+
+batch_size = 4
+# batch_size = args.batch_size
 num_workers = args.workers
 
 loader = Loader(pocket_path=pocket_path, ligand_path='data/ligands/whole_dict_embed_128.p',
@@ -155,24 +163,3 @@ Dataloader creation
 # num_workers = 20
 # train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_workers=num_workers)
 # print('Created data loader')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

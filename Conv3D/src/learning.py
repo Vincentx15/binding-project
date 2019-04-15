@@ -1,8 +1,8 @@
 import time
 import torch
 import sys
-from src.utils import debug_memory, ES
 import pickle
+from src.utils import debug_memory, ES
 
 
 def test(model, test_loader, test_loss_fn, device):
@@ -15,7 +15,7 @@ def test(model, test_loader, test_loss_fn, device):
     :return:
     """
     model.eval()
-    labels = pickle.load(open('data/ligands/whole_dict_embed_128.p', 'rb'))
+    # labels = pickle.load(open('data/ligands/whole_dict_embed_128.p', 'rb'))
     # for key, value in labels.items():
     #     tensor = torch.from_numpy(value)
     #     labels[key] = tensor
@@ -28,10 +28,12 @@ def test(model, test_loader, test_loss_fn, device):
         output = model(inputs_gpu)
         test_size += len(inputs_gpu)
         test_loss += test_loss_fn(output, targets_gpu).item()
-        cpu_output = output.detach().cpu()
 
+        """
+        cpu_output = output.detach().cpu()
         for output, true in zip(cpu_output, targets):
             test_accuracy += ES(labels, output, true, threshold=10)
+        """
 
         if not batch_idx % 50:
             print('Computed {:.2f} batches for the test'.format(batch_idx))
@@ -49,7 +51,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
     :param optimizer: the optimizer to use (eg SGD or Adam)
     :param device: the device on which to run
     :param train_loader: dataloader for training
-    :param validation_loader: dataloader for validation
+    :param test_loader: dataloader for validation
     :param save_path: where to save the model
     :param writer: a Tensorboard object (defined in utils)
     :param num_epochs: int number of epochs
@@ -58,7 +60,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
     """
 
     epochs_from_best = 0
-    early_stop_threshold = 10
+    early_stop_threshold = 30
 
     start_time = time.time()
     best_loss = sys.maxsize
@@ -84,7 +86,10 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
             optimizer.step()
             optimizer.zero_grad()
 
-            running_loss += loss.item()
+            batch_loss = loss.item()
+            del loss
+            running_loss += batch_loss
+
             # running_corrects += labels.eq(target.view_as(out)).sum().item()
             if batch_idx % 20 == 0:
                 time_elapsed = time.time() - start_time
@@ -93,11 +98,11 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
                     batch_idx * batch_size,
                     num_batches * batch_size,
                     100. * batch_idx / num_batches,
-                    loss.item(),
+                    batch_loss,
                     time_elapsed))
 
                 # tensorboard logging
-                writer.log_scalar("Training loss", loss.item(),
+                writer.log_scalar("Training loss", batch_loss,
                                   epoch * num_batches + batch_idx)
 
         # Log training metrics
@@ -120,7 +125,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
-                'loss': loss
+                'loss': criterion
             }, save_path)
 
         # Early stopping
