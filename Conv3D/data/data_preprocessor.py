@@ -149,8 +149,8 @@ class Conv3DDatasetHardCheck(Dataset):
         :return:
         """
         if self.augment_flips:
+            pdb, rotation = self.pockets_rotations[item]
             try:
-                pdb, rotation = self.pockets_rotations[item]
                 pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
                 pocket_tensor = torch.from_numpy(pocket_tensor)
                 pocket_tensor = pocket_tensor.float()

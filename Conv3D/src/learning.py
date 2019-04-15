@@ -21,8 +21,8 @@ def test(model, test_loader, test_loss_fn, device):
     #     labels[key] = tensor
     #     tensor.requires_grad = False
     test_loss = 0
-    test_size = 0
     test_accuracy = 0
+    test_size = len(test_loader)
     for batch_idx, (inputs, targets) in enumerate(test_loader):
         inputs_gpu, targets_gpu = inputs.to(device), targets.to(device)
         output = model(inputs_gpu)
@@ -102,12 +102,12 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
                     time_elapsed))
 
                 # tensorboard logging
-                writer.log_scalar("Training loss", batch_loss,
+                writer.log_scalar("Training batch loss", batch_loss,
                                   epoch * num_batches + batch_idx)
 
         # Log training metrics
         train_loss = running_loss / num_batches
-        writer.log_scalar("Train loss during training", train_loss, epoch)
+        writer.log_scalar("Training epoch loss", train_loss, epoch)
 
         # train_accuracy = running_corrects / num_batches
         # writer.log_scalar("Train accuracy during training", train_accuracy, epoch)
@@ -115,7 +115,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
         # Test phase
         test_loss, test_accuracy = test(model, test_loader, criterion, device)
         writer.log_scalar("Test loss during training", test_loss, epoch)
-        writer.log_scalar("Test accuracy during training", test_accuracy, epoch)
+        # writer.log_scalar("Test accuracy during training", test_accuracy, epoch)
 
         # Checkpointing
         if test_loss < best_loss:
