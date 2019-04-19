@@ -4,8 +4,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--parallel", default=True, help="decide if we run thing on parallel", action='store_true')
 parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
                     help="choose the way to load data")
-parser.add_argument("-po", "--pockets", default='unique_pockets',
-                    choices=['unique_pockets', 'unaligned', 'unaligned', 'unaligned_hard'],
+parser.add_argument("-po", "--pockets", default='unaligned',
+                    choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
 parser.add_argument("-bs", "--batch_size", type=int, default=128,
                     help="choose the batch size")

@@ -58,8 +58,10 @@ class Loader():
         valid_set = Subset(self.dataset, valid_indices)
         test_set = Subset(self.dataset, test_indices)
 
+#        train_loader = DataLoader(dataset=train_set, batch_size=self.batch_size,
+ #                                 num_workers=self.num_workers)
         train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=self.batch_size,
-                                  num_workers=self.num_workers)
+                                 num_workers=self.num_workers)
         valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=self.batch_size,
                                   num_workers=self.num_workers)
         test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=self.batch_size,
@@ -166,6 +168,7 @@ class Conv3DDatasetRam(Dataset):
     def __init__(self, pocket_path, ligand_path, augment_flips):
         self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
 
+        self.count = 0
         self.path = pocket_path
         self.augment_flips = augment_flips
 
@@ -198,6 +201,8 @@ class Conv3DDatasetRam(Dataset):
         :param item:
         :return:
         """
+        # self.count += 1
+        # print(f'{self.count} calls')
         # We need to be cautious here to avoid messing with the order of the tokens
         if self.augment_flips:
             pocket_tensor = self.pocket_embeddings[item]

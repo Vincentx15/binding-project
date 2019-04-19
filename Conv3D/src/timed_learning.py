@@ -65,6 +65,9 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
         for batch_idx, (inputs, labels) in enumerate(train_loader):
             tloop = time.perf_counter()
 
+            print('enter loop', torch.cuda.memory_allocated(device=device))
+            print(torch.cuda.memory_cached(device=device))
+
             batch_size = len(inputs)
 
             t3 = time.perf_counter()
@@ -75,13 +78,25 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
 
             t2 = time.perf_counter()
             out = model(inputs)
+            print('forward', torch.cuda.memory_allocated(device=device))
+            print(torch.cuda.memory_cached(device=device))
+
+            torch.cuda.synchronize()  # wait for mm to finish
+         
             loss = criterion(out, labels)
             loss.backward()
 
+            print('backward', torch.cuda.memory_allocated(device=device))
+            print(torch.cuda.memory_cached(device=device))
+
+            torch.cuda.synchronize()  # wait for mm to finish
+            
             optimizer.step()
             optimizer.zero_grad()
 
-            running_loss += loss.item()
+            batch_loss = loss.item()
+            del loss
+            running_loss += batch_loss
             # running_corrects += labels.eq(target.view_as(out)).sum().item()
             if batch_idx % 20 == 0:
                 time_elapsed = time.time() - start_time
@@ -90,11 +105,11 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
                     batch_idx * batch_size,
                     num_batches * batch_size,
                     100. * batch_idx / num_batches,
-                    loss.item(),
+                    batch_loss,
                     time_elapsed))
 
                 # tensorboard logging
-                writer.log_scalar("Training loss", loss.item(),
+                writer.log_scalar("Training loss", batch_loss,
                                   epoch * num_batches + batch_idx)
 
             torch.cuda.synchronize()  # wait for mm to finish
@@ -102,7 +117,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
             print('Computation {:.02e}s'.format(t2))
 
             tloop = time.perf_counter() - tloop
-            print('send_data {:.02e}s'.format(tloop))
+            print('Time loop {:.02e}s'.format(tloop))
 
             # Max (t2+t3), t1
             ttot = time.perf_counter() - ttot
@@ -132,7 +147,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
-                'loss': loss
+                'loss': criterion
             }, save_path)
 
         # Early stopping
