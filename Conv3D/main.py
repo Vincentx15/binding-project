@@ -5,7 +5,7 @@ parser.add_argument("-p", "--parallel", default=True, help="decide if we run thi
 parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
                     help="choose the way to load data")
 parser.add_argument("-po", "--pockets", default='unique_pockets',
-                    choices=['unique_pockets', 'unaligned', 'unaligned', 'unaligned_hard'],
+                    choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
 parser.add_argument("-bs", "--batch_size", type=int, default=128,
                     help="choose the batch size")
@@ -28,8 +28,9 @@ from src.utils import Tensorboard, mkdirs
 import src.learning as learn
 from data.loader import Loader
 
-from models.SmallC3D import SmallC3D
 
+from models.BabyC3D import BabyC3D
+# from models.SmallC3D import SmallC3D
 # from models.Toy import Toy
 # from models.C3D import C3D
 
@@ -95,7 +96,8 @@ Model loading
 '''
 # model = Toy()
 # model = C3D()
-model = SmallC3D()
+# model = SmallC3D()
+model = BabyC3D()
 model.to(device)
 
 if used_gpus_count > 1:

@@ -26,7 +26,6 @@ def test(model, test_loader, test_loss_fn, device):
     for batch_idx, (inputs, targets) in enumerate(test_loader):
         inputs_gpu, targets_gpu = inputs.to(device), targets.to(device)
         output = model(inputs_gpu)
-        test_size += len(inputs_gpu)
         test_loss += test_loss_fn(output, targets_gpu).item()
 
         """
