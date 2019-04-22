@@ -222,10 +222,69 @@ def remove_faulty_from_csv(directory, csv_path):
             os.remove(os.path.join(directory, pdb[0]))
 
 
+def test_loader(pocket_file='pockets/',
+                pocket_data='unique_pockets_hard',
+                batch_size=64,
+                num_workers=20,
+                augment_flips=False,
+                ram=False
+                ):
+    """
+    Test to load the data in a certain way for 2 epochs to see if everything works
+    :param pocket_file:
+    :param pocket_data:
+    :param batch_size:
+    :param num_workers:
+    :param augment_flips:
+    :param ram:
+    :return:
+    """
+    import os
+    from data.loader import Loader
+
+    pocket_path = os.path.join(pocket_file, pocket_data)
+
+    loader = Loader(pocket_path=pocket_path, ligand_path='ligands/whole_dict_embed_128.p',
+                    batch_size=batch_size, num_workers=num_workers,
+                    augment_flips=augment_flips, ram=ram, siamese=True)
+    train_loader, valid_loader, test_loader = loader.get_data()
+
+    print('Created data loader')
+
+    a = time.perf_counter()
+    for epoch in range(2):
+        print(epoch)
+        for batch_idx, (inputs, labels, pdb) in enumerate(train_loader):
+            # print(f'{batch_idx} points ')
+            # raise ValueError
+            if not batch_idx % 20:
+                pass
+                print('train', pdb)
+                # print(batch_idx, time.perf_counter() - a)
+                # a = time.perf_counter()
+
+        for batch_idx, (inputs, labels, pdb) in enumerate(valid_loader):
+            if not batch_idx % 20:
+                pass
+                print('vali', pdb)
+                # print(batch_idx, time.perf_counter() - a)
+                # a = time.perf_counter()
+
+        for batch_idx, (inputs, labels, pdb) in enumerate(test_loader):
+            if not batch_idx % 20:
+                pass
+                print('test', pdb)
+                # print(batch_idx, time.perf_counter() - a)
+                # a = time.perf_counter()
+
+    print('Done in : ', time.perf_counter() - a)
+
 if __name__ == '__main__':
     pass
     # remove_duplicates()
-    check_data_load('pockets/unaligned')
+    # check_data_load('pockets/unaligned')
     # make_hard_enumeration(path='pockets/unaligned', out_path='unaligned_hard')
     # check_data_load('pockets/unaligned')
     # remove_faulty_from_csv('pockets/unaligned', 'failed.csv')
+
+    test_loader()

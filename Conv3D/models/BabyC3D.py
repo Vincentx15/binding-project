@@ -50,6 +50,5 @@ class BabyC3D(nn.Module):
     def forward(self, x):
         out = self._features(x)
         out = out.view(out.size(0), -1)
-        print(out.size())
         out = self._classifier(out)
         return out
