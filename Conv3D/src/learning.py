@@ -59,7 +59,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
     """
 
     epochs_from_best = 0
-    early_stop_threshold = 30
+    early_stop_threshold = 60
 
     start_time = time.time()
     best_loss = sys.maxsize

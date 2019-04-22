@@ -73,7 +73,6 @@ class BatchSampler(Sampler):
         # self.epoch = 0
         # self.lock = th.Lock()
 
-
     def __len__(self):
         return 8 * self.size
 
@@ -265,6 +264,7 @@ class Conv3DDatasetRam(Dataset):
     def __init__(self, pocket_path, ligand_path, augment_flips):
         self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
 
+        self.count = 0
         self.path = pocket_path
         self.augment_flips = augment_flips
 
@@ -297,6 +297,8 @@ class Conv3DDatasetRam(Dataset):
         :param item:
         :return:
         """
+        # self.count += 1
+        # print(f'{self.count} calls')
         # We need to be cautious here to avoid messing with the order of the tokens
         if self.augment_flips:
             pocket_tensor = self.pocket_embeddings[item]

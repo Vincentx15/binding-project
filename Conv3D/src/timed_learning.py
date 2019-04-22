@@ -65,6 +65,9 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
         for batch_idx, (inputs, labels) in enumerate(train_loader):
             tloop = time.perf_counter()
 
+            print('enter loop', torch.cuda.memory_allocated(device=device))
+            print(torch.cuda.memory_cached(device=device))
+
             batch_size = len(inputs)
 
             t3 = time.perf_counter()
@@ -75,16 +78,25 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
 
             t2 = time.perf_counter()
             out = model(inputs)
+            print('forward', torch.cuda.memory_allocated(device=device))
+            print(torch.cuda.memory_cached(device=device))
+
+            torch.cuda.synchronize()  # wait for mm to finish
+         
             loss = criterion(out, labels)
             loss.backward()
 
+            print('backward', torch.cuda.memory_allocated(device=device))
+            print(torch.cuda.memory_cached(device=device))
+
+            torch.cuda.synchronize()  # wait for mm to finish
+            
             optimizer.step()
             optimizer.zero_grad()
 
             batch_loss = loss.item()
             del loss
             running_loss += batch_loss
-
             # running_corrects += labels.eq(target.view_as(out)).sum().item()
             if batch_idx % 20 == 0:
                 time_elapsed = time.time() - start_time
