@@ -22,14 +22,13 @@ import torch.optim as optim
 import time
 import os
 
-
 # Homemade modules
 from src.utils import Tensorboard, mkdirs
 import src.learning as learn
 from data.loader import Loader
 
-
 from models.BabyC3D import BabyC3D
+
 # from models.SmallC3D import SmallC3D
 # from models.Toy import Toy
 # from models.C3D import C3D
@@ -72,7 +71,6 @@ elif args.data_loading == 'hram':
     ram = True
 else:
     raise ValueError('Not implemented this DataLoader yet')
-
 
 # batch_size = 4
 batch_size = args.batch_size

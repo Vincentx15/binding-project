@@ -31,6 +31,11 @@ data points and then the loader can
 - construct the tensor on the fly or load the whole data on the RAM (argument : ram)
 - Do some data augmentation or just load a pre-processed dataset (argument : augment_flip)
 
+We also can use a 'siamese version' of the data Loader to have each batch computing an 
+average over the 8 possible poses. This approach is an elegant way of bypassing the 
+weight tying procedure but reduces the effective batch size quite a lot.
+One should also pay attention to the testing phase.
+
 ## Src
 The training utilities. The logging uses tensorboard and the rest is pure pytorch.
 Some helper functions can be found in utils.py (logging, model saving...), while the

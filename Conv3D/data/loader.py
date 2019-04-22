@@ -5,6 +5,8 @@ import pickle
 import os
 import multiprocessing as mlt
 from torch.utils.data import Subset, DataLoader
+from torch.utils.data import Sampler
+import threading as th
 
 '''
 Data generation process, we can choose to read a preprocessed version or to augment it on the fly
@@ -12,15 +14,89 @@ One can also choose to load everything in RAM to speed up the process
 '''
 
 
-class Loader():
+class SiameseSampler(Sampler):
+    """
+    provide samples of 8 consecutive values for ordered inputs
+    """
 
+    def __init__(self, batch_size, size):
+        """
+
+        :param batch_size: len of the original batch size
+        :param size: len of the total inputs
+        """
+        # super(Sampler, self).__init__()
+        assert batch_size % 8 == 0
+        self.batch_size_pdb = int(batch_size / 8)
+        self.size = int(size / 8)
+        self.indices = np.array(list(range(self.size)))
+        self.current = 0
+        # print('New BS')
+        self.epoch = 0
+        self.lock = th.Lock()
+
+        print(size)
+
+    def __len__(self):
+        return 8 * self.size
+
+    def create_list(self):
+        np.random.shuffle(self.indices)
+        full = [pdb * 8 + rotation for pdb in self.indices for rotation in range(8)]
+        # print(len(full), full)
+        return full
+
+    def __iter__(self):
+        list = self.create_list()
+        return iter(list)
+
+
+class BatchSampler(Sampler):
+    """
+    provide samples of 8 consecutive values for ordered inputs
+    """
+
+    def __init__(self, batch_size, size):
+        """
+
+        :param batch_size: len of the original batch size
+        :param size: len of the total inputs
+        """
+        # super(Sampler, self).__init__()
+        assert batch_size % 8 == 0
+        self.batch_size = batch_size
+        self.batch_size_pdb = int(batch_size / 8)
+        self.size = int(size / 8)
+        self.indices = np.array(list(range(self.size)))
+        self.current = 0
+        # print('New BS')
+        # self.epoch = 0
+        # self.lock = th.Lock()
+
+    def __len__(self):
+        return 8 * self.size
+
+    def create_list(self):
+        full = [pdb * 8 + rotation for pdb in self.indices for rotation in range(8)]
+        full_batches = [full[i:i + self.batch_size] for i in range(0, len(full), self.batch_size)]
+        np.random.shuffle(self.indices)
+        # print(full_batches)
+        return full_batches
+
+    def __iter__(self):
+        list = self.create_list()
+        return iter(list)
+
+
+class Loader():
     def __init__(self,
                  pocket_path='data/pockets/unique_pockets_hard/',
                  ligand_path='data/ligands/whole_dict_embed_128.p',
                  batch_size=128,
                  num_workers=20,
                  augment_flips=False,
-                 ram=False):
+                 ram=False,
+                 siamese=False):
         """
         Wrapper class to call with all arguments and that returns appropriate data_loaders
         :param pocket_path:
@@ -30,6 +106,7 @@ class Loader():
         :param augment_flips: perform numpy flips
         :param ram: store whole thing in RAM
         """
+        self.siamese = siamese
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.dataset = self.create_dataset(pocket_path=pocket_path,
@@ -37,7 +114,8 @@ class Loader():
                                            augment_flips=augment_flips,
                                            ram=ram)
 
-    def create_dataset(self, pocket_path, ligand_path, augment_flips=False, ram=False):
+    @staticmethod
+    def create_dataset(pocket_path, ligand_path, augment_flips=False, ram=False):
         if ram:
             return Conv3DDatasetRam(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips)
         else:
@@ -45,23 +123,41 @@ class Loader():
 
     def get_data(self):
         n = len(self.dataset)
-        indices = list(range(n))
-        np.random.seed(0)
-        np.random.shuffle(indices)
-        split_train, split_valid = 0.7, 0.85
 
-        train_indices = indices[:int(split_train * n)]
-        valid_indices = indices[int(split_train * n):int(split_valid * n)]
-        test_indices = indices[int(split_valid * n):]
+        # indices = list(range(n))
+        # np.random.shuffle(indices)
+
+        np.random.seed(0)
+        split_train, split_valid = 0.7, 0.85
+        train_index, valid_index = int(split_train * n), int(split_valid * n)
+        # print(train_index, valid_index)
+        train_index, valid_index = train_index - train_index % 8, valid_index - valid_index % 8
+        # print(train_index, valid_index)
+
+        indices = [item for sublist in BatchSampler(self.batch_size, n) for item in sublist]
+
+        train_indices = indices[:train_index]
+        valid_indices = indices[train_index:valid_index]
+        test_indices = indices[valid_index:]
 
         train_set = Subset(self.dataset, train_indices)
         valid_set = Subset(self.dataset, valid_indices)
         test_set = Subset(self.dataset, test_indices)
 
-#        train_loader = DataLoader(dataset=train_set, batch_size=self.batch_size,
- #                                 num_workers=self.num_workers)
+        if self.siamese:
+            train_loader = DataLoader(dataset=train_set,
+                                      batch_sampler=BatchSampler(self.batch_size, len(train_indices)),
+                                      num_workers=self.num_workers)
+            valid_loader = DataLoader(dataset=valid_set,
+                                      batch_sampler=BatchSampler(self.batch_size, len(valid_indices)),
+                                      num_workers=self.num_workers)
+            test_loader = DataLoader(dataset=test_set,
+                                     batch_sampler=BatchSampler(self.batch_size, len(test_indices)),
+                                     num_workers=self.num_workers)
+            return train_loader, valid_loader, test_loader
+
         train_loader = DataLoader(dataset=train_set, shuffle=True, batch_size=self.batch_size,
-                                 num_workers=self.num_workers)
+                                  num_workers=self.num_workers)
         valid_loader = DataLoader(dataset=valid_set, shuffle=True, batch_size=self.batch_size,
                                   num_workers=self.num_workers)
         test_loader = DataLoader(dataset=test_set, shuffle=True, batch_size=self.batch_size,
@@ -108,7 +204,7 @@ class Conv3DDatasetHard(Dataset):
         self.path = pocket_path
         self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
         self.augment_flips = augment_flips
-        self.pockets = os.listdir(pocket_path)
+        self.pockets = sorted(os.listdir(pocket_path))
         if self.augment_flips:
             self.pockets_rotations = [(pdb, rotation) for pdb in self.pockets for rotation in range(8)]
 
@@ -142,7 +238,7 @@ class Conv3DDatasetHard(Dataset):
         ligand_embedding = self.ligands_dict[ligand_id]
         ligand_embedding = torch.from_numpy(ligand_embedding)
 
-        return pocket_tensor, ligand_embedding
+        return pocket_tensor, ligand_embedding, pdb
 
 
 def read(x):
@@ -172,7 +268,7 @@ class Conv3DDatasetRam(Dataset):
         self.path = pocket_path
         self.augment_flips = augment_flips
 
-        self.pockets = os.listdir(pocket_path)
+        self.pockets = sorted(os.listdir(pocket_path))
         self.path_to_pocket = [os.path.join(self.path, pocket) for pocket in self.pockets]
         if self.augment_flips:
             self.pockets_rotations = [(pdb_path, rotation) for pdb_path in self.path_to_pocket for rotation in range(8)]
@@ -239,7 +335,6 @@ if __name__ == '__main__':
 
     print('Done in : ', time.perf_counter() - a)
     print()
-
 
     print('Use : ')
     a = time.perf_counter()
