@@ -254,26 +254,27 @@ def test_loader(pocket_file='pockets/',
     a = time.perf_counter()
     for epoch in range(2):
         print(epoch)
+        print(len(train_loader))
         for batch_idx, (inputs, labels, pdb) in enumerate(train_loader):
             # print(f'{batch_idx} points ')
             # raise ValueError
             if not batch_idx % 20:
                 pass
-                print('train', pdb)
+            print(batch_idx, 'train', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
         for batch_idx, (inputs, labels, pdb) in enumerate(valid_loader):
             if not batch_idx % 20:
                 pass
-                print('vali', pdb)
+                print('vali', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
         for batch_idx, (inputs, labels, pdb) in enumerate(test_loader):
             if not batch_idx % 20:
                 pass
-                print('test', pdb)
+                print('test', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 

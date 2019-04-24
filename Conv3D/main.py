@@ -7,12 +7,10 @@ parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'har
 parser.add_argument("-po", "--pockets", default='unique_pockets',
                     choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
-parser.add_argument("-bs", "--batch_size", type=int, default=128,
-                    help="choose the batch size")
-parser.add_argument("-nw", "--workers", type=int, default=20,
-                    help="Number of workers to load data")
-parser.add_argument("-n", "--name", type=str, default='default_name',
-                    help="Name for the logs")
+parser.add_argument("-bs", "--batch_size", type=int, default=128, help="choose the batch size")
+parser.add_argument("-nw", "--workers", type=int, default=20, help="Number of workers to load data")
+parser.add_argument("-wt", "--wall_time", type=int, default=None, help="Max time to run the model")
+parser.add_argument("-n", "--name", type=str, default='default_name', help="Name for the logs")
 args = parser.parse_args()
 
 # Torch imports
@@ -117,6 +115,7 @@ name = args.name
 log_folder, result_folder = mkdirs(name)
 writer = Tensorboard(log_folder)
 
+
 '''
 Get Summary of the model
 '''
@@ -130,6 +129,7 @@ Get Summary of the model
 #     print(p.numel())
 # print(sum(p.numel() for p in model.parameters()))
 
+wall_time = args.wall_time
 
 '''
 Run
@@ -143,7 +143,7 @@ learn.train_model(model=model,
                   save_path=result_folder,
                   writer=writer,
                   num_epochs=400,
-                  wall_time=9)
+                  wall_time=wall_time)
 
 '''
 Dataloader creation

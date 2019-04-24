@@ -74,7 +74,7 @@ class BatchSampler(Sampler):
         # self.lock = th.Lock()
 
     def __len__(self):
-        return 8 * self.size
+        return self.size // self.batch_size_pdb
 
     def create_list(self):
         full = [pdb * 8 + rotation for pdb in self.indices for rotation in range(8)]
