@@ -6,7 +6,7 @@ import numpy as np
 import pickle
 import csv
 
-from data.utils import write_error_log
+from utils import write_error_log
 
 import torch
 from torch.utils.data.dataset import Dataset
@@ -231,6 +231,7 @@ def test_loader(pocket_file='pockets/',
                 ):
     """
     Test to load the data in a certain way for 2 epochs to see if everything works
+    One should comment all the instructions in the get_item method but add a return 'pdb' at the end of the tuple to be able to print the name fetched by the loader
     :param pocket_file:
     :param pocket_data:
     :param batch_size:
@@ -240,7 +241,7 @@ def test_loader(pocket_file='pockets/',
     :return:
     """
     import os
-    from data.loader import Loader
+    from loader import Loader
 
     pocket_path = os.path.join(pocket_file, pocket_data)
 
@@ -258,23 +259,23 @@ def test_loader(pocket_file='pockets/',
         for batch_idx, (inputs, labels, pdb) in enumerate(train_loader):
             # print(f'{batch_idx} points ')
             # raise ValueError
-            if not batch_idx % 20:
+            if not batch_idx % 100:
                 pass
-            print(batch_idx, 'train', pdb[:17])
+                print(batch_idx*batch_size,' on ',len(train_loader), 'train', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
         for batch_idx, (inputs, labels, pdb) in enumerate(valid_loader):
-            if not batch_idx % 20:
+            if not batch_idx % 50:
                 pass
-                print('vali', pdb[:17])
+                print(batch_idx*batch_size,' on ',len(valid_loader), 'valid', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
         for batch_idx, (inputs, labels, pdb) in enumerate(test_loader):
-            if not batch_idx % 20:
+            if not batch_idx % 50:
                 pass
-                print('test', pdb[:17])
+                print(batch_idx*batch_size,' on ',len(test_loader), 'test', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
