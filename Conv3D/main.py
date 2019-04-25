@@ -2,9 +2,10 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--parallel", default=True, help="decide if we run thing on parallel", action='store_true')
+parser.add_argument("-s", "--siamese", default=True, help="decide if use siamese loading", action='store_true')
 parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
                     help="choose the way to load data")
-parser.add_argument("-po", "--pockets", default='unique_pockets',
+parser.add_argument("-po", "--pockets", default='unique_pockets_hard',
                     choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
 parser.add_argument("-bs", "--batch_size", type=int, default=128, help="choose the batch size")
@@ -26,8 +27,8 @@ import src.learning as learn
 from data.loader import Loader
 
 from models.BabyC3D import BabyC3D
+from models.SmallC3D import SmallC3D
 
-# from models.SmallC3D import SmallC3D
 # from models.Toy import Toy
 # from models.C3D import C3D
 
@@ -70,15 +71,19 @@ elif args.data_loading == 'hram':
 else:
     raise ValueError('Not implemented this DataLoader yet')
 
-# batch_size = 4
+# batch_size = 8
 batch_size = args.batch_size
 num_workers = args.workers
+siamese = args.siamese
 
 loader = Loader(pocket_path=pocket_path, ligand_path='data/ligands/whole_dict_embed_128.p',
-                batch_size=batch_size, num_workers=num_workers,
+                batch_size=batch_size, num_workers=num_workers, siamese=siamese,
                 augment_flips=augment_flips, ram=ram)
 train_loader, _, test_loader = loader.get_data()
 print('Created data loader')
+
+if len(train_loader) == 0 & len(test_loader) == 0:
+    raise ValueError('there are not enough points compared to the BS')
 
 # a = time.perf_counter()
 # for batch_idx, (inputs, labels) in enumerate(train_loader):
@@ -114,7 +119,6 @@ Experiment Setup
 name = args.name
 log_folder, result_folder = mkdirs(name)
 writer = Tensorboard(log_folder)
-
 
 '''
 Get Summary of the model

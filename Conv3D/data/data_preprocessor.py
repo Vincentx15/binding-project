@@ -247,7 +247,7 @@ def test_loader(pocket_file='pockets/',
 
     loader = Loader(pocket_path=pocket_path, ligand_path='ligands/whole_dict_embed_128.p',
                     batch_size=batch_size, num_workers=num_workers,
-                    augment_flips=augment_flips, ram=ram, siamese=True)
+                    augment_flips=augment_flips, ram=ram, siamese=True, debug=True)
     train_loader, valid_loader, test_loader = loader.get_data()
 
     print('Created data loader')
@@ -261,25 +261,26 @@ def test_loader(pocket_file='pockets/',
             # raise ValueError
             if not batch_idx % 100:
                 pass
-                print(batch_idx*batch_size,' on ',len(train_loader), 'train', pdb[:17])
+                print(batch_idx * batch_size, ' on ', len(train_loader) * batch_size, 'train', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
         for batch_idx, (inputs, labels, pdb) in enumerate(valid_loader):
             if not batch_idx % 50:
                 pass
-                print(batch_idx*batch_size,' on ',len(valid_loader), 'valid', pdb[:17])
+                print(batch_idx * batch_size, ' on ', len(valid_loader) * batch_size, 'valid', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
         for batch_idx, (inputs, labels, pdb) in enumerate(test_loader):
             if not batch_idx % 50:
                 pass
-                print(batch_idx*batch_size,' on ',len(test_loader), 'test', pdb[:17])
+                print(batch_idx * batch_size, ' on ', len(test_loader) * batch_size, 'test', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
     print('Done in : ', time.perf_counter() - a)
+
 
 if __name__ == '__main__':
     pass

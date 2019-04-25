@@ -93,10 +93,10 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
             if batch_idx % 20 == 0:
                 time_elapsed = time.time() - start_time
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}  Time: {:.2f}'.format(
-                    epoch,
-                    batch_idx * batch_size,
+                    epoch+1,
+                    (batch_idx + 1) * batch_size,
                     num_batches * batch_size,
-                    100. * batch_idx / num_batches,
+                    100. * (batch_idx + 1) / num_batches,
                     batch_loss,
                     time_elapsed))
 

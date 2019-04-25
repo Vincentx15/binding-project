@@ -96,7 +96,8 @@ class Loader():
                  num_workers=20,
                  augment_flips=False,
                  ram=False,
-                 siamese=False):
+                 siamese=False,
+                 debug=False):
         """
         Wrapper class to call with all arguments and that returns appropriate data_loaders
         :param pocket_path:
@@ -112,14 +113,17 @@ class Loader():
         self.dataset = self.create_dataset(pocket_path=pocket_path,
                                            ligand_path=ligand_path,
                                            augment_flips=augment_flips,
-                                           ram=ram)
+                                           ram=ram,
+                                           debug=debug)
 
     @staticmethod
-    def create_dataset(pocket_path, ligand_path, augment_flips=False, ram=False):
+    def create_dataset(pocket_path, ligand_path, augment_flips=False, ram=False, debug=False):
         if ram:
-            return Conv3DDatasetRam(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips)
+            return Conv3DDatasetRam(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips,
+                                    debug=debug)
         else:
-            return Conv3DDatasetHard(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips)
+            return Conv3DDatasetHard(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips,
+                                     debug=debug)
 
     def get_data(self):
         n = len(self.dataset)
@@ -200,7 +204,9 @@ class Conv3DDatasetHard(Dataset):
     Construct the data on the fly
     """
 
-    def __init__(self, pocket_path, ligand_path, augment_flips):
+    def __init__(self, pocket_path, ligand_path, augment_flips,
+                 debug):
+        self.debug = debug
         self.path = pocket_path
         self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
         self.augment_flips = augment_flips
@@ -218,6 +224,9 @@ class Conv3DDatasetHard(Dataset):
         :param item:
         :return:
         """
+        if self.debug:
+            return 0, 0, self.pockets[item]
+
         if self.augment_flips:
             pdb, rotation = self.pockets_rotations[item]
             pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
@@ -239,7 +248,7 @@ class Conv3DDatasetHard(Dataset):
         ligand_embedding = self.ligands_dict[ligand_id]
         ligand_embedding = torch.from_numpy(ligand_embedding)
 
-        return pocket_tensor, ligand_embedding, pdb
+        return pocket_tensor, ligand_embedding
 
 
 def read(x):
@@ -262,7 +271,9 @@ class Conv3DDatasetRam(Dataset):
     Loads the whole data we will iterate on in the RAM and returns a Dataset object to access it
     """
 
-    def __init__(self, pocket_path, ligand_path, augment_flips):
+    def __init__(self, pocket_path, ligand_path, augment_flips, debug):
+        self.debug = debug
+
         self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
 
         self.count = 0
@@ -298,6 +309,11 @@ class Conv3DDatasetRam(Dataset):
         :param item:
         :return:
         """
+
+        if self.debug:
+            pdb, rotation = self.pockets_rotations[item]
+            *_, ligand_id, _ = pdb.split('_')
+            return pdb, ligand_id, pdb
         # self.count += 1
         # print(f'{self.count} calls')
         # We need to be cautious here to avoid messing with the order of the tokens
