@@ -1,8 +1,10 @@
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--parallel", default=True, help="decide if we run thing on parallel", action='store_true')
-parser.add_argument("-s", "--siamese", default=True, help="decide if use siamese loading", action='store_true')
+parser.add_argument("-p", "--parallel", default=True, help="If we don't want to run thing in parallel",
+                    action='store_false')
+parser.add_argument("-s", "--siamese", default=True, help="If we don't want to use siamese loading",
+                    action='store_false')
 parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
                     help="choose the way to load data")
 parser.add_argument("-po", "--pockets", default='unique_pockets_hard',
@@ -32,6 +34,8 @@ from models.SmallC3D import SmallC3D
 # from models.Toy import Toy
 # from models.C3D import C3D
 
+print('Done importing')
+
 '''
 Hardware settings
 '''
@@ -45,7 +49,7 @@ if args.parallel:
 else:
     used_gpus_count = 1
 
-print('Done importing')
+print(f'Using {used_gpus_count} GPUs')
 
 '''
 Dataloader creation
@@ -76,10 +80,13 @@ batch_size = args.batch_size
 num_workers = args.workers
 siamese = args.siamese
 
+print(f'Using batch_size of {batch_size}, {"siamese" if siamese else "serial"} loading')
+
 loader = Loader(pocket_path=pocket_path, ligand_path='data/ligands/whole_dict_embed_128.p',
                 batch_size=batch_size, num_workers=num_workers, siamese=siamese,
                 augment_flips=augment_flips, ram=ram)
 train_loader, _, test_loader = loader.get_data()
+
 print('Created data loader')
 
 if len(train_loader) == 0 & len(test_loader) == 0:
@@ -101,6 +108,8 @@ Model loading
 model = BabyC3D()
 model.to(device)
 
+print(f'Using {model.__class__} as model')
+
 if used_gpus_count > 1:
     model = torch.nn.DataParallel(model)
 
@@ -119,6 +128,9 @@ Experiment Setup
 name = args.name
 log_folder, result_folder = mkdirs(name)
 writer = Tensorboard(log_folder)
+
+print(f'Saving result in {name}')
+
 
 '''
 Get Summary of the model
