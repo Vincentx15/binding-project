@@ -209,6 +209,13 @@ class Conv3DDatasetHard(Dataset):
         self.debug = debug
         self.path = pocket_path
         self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
+
+        # import random
+        # ligands_dict = pickle.load(open(ligand_path, 'rb'))
+        # keys = ligands_dict.keys()
+        # random.shuffle(keys)
+        # self.ligands_dict = dict(zip(keys, ligands_dict.values()))
+
         self.augment_flips = augment_flips
         self.pockets = sorted(os.listdir(pocket_path))
         if self.augment_flips:

@@ -30,6 +30,7 @@ from data.loader import Loader
 
 from models.BabyC3D import BabyC3D
 from models.SmallC3D import SmallC3D
+from models.Se3cnn import Se3cnn
 
 # from models.Toy import Toy
 # from models.C3D import C3D
@@ -75,8 +76,8 @@ elif args.data_loading == 'hram':
 else:
     raise ValueError('Not implemented this DataLoader yet')
 
-# batch_size = 8
-batch_size = args.batch_size
+batch_size = 8
+# batch_size = args.batch_size
 num_workers = args.workers
 siamese = args.siamese
 
@@ -105,7 +106,8 @@ Model loading
 # model = Toy()
 # model = C3D()
 # model = SmallC3D()
-model = BabyC3D()
+# model = BabyC3D()
+model = Se3cnn()
 model.to(device)
 
 print(f'Using {model.__class__} as model')
@@ -131,15 +133,23 @@ writer = Tensorboard(log_folder)
 
 print(f'Saving result in {name}')
 
-
 '''
 Get Summary of the model
 '''
 
-# from torchsummary import summary
 # train_loader = iter(train_loader)
-# print(next(train_loader)[0].shape)
+# batch_x, batch_y = next(train_loader)
+# print(batch_x.size())
+# batch_x = batch_x.cuda()
+# y = model(batch_x)
+# print(y, y.size())
+# print('batch_y', batch_y.size())
+# raise ValueError
+from torchsummary import summary
+
 # summary(model, (4, 42, 32, 32))
+
+# raise ValueError
 # for p in model.parameters():
 #     print(p.__name__)
 #     print(p.numel())
