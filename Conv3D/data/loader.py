@@ -74,7 +74,8 @@ class BatchSampler(Sampler):
         # self.lock = th.Lock()
 
     def __len__(self):
-        return self.size // self.batch_size_pdb
+        # We do the approximation that we have always one batch even if we only have 100 points and the BS is 128
+        return self.size // self.batch_size_pdb + 1
 
     def create_list(self):
         full = [pdb * 8 + rotation for pdb in self.indices for rotation in range(8)]
@@ -97,7 +98,8 @@ class Loader():
                  augment_flips=False,
                  ram=False,
                  siamese=False,
-                 debug=False):
+                 debug=False,
+                 shuffled=False):
         """
         Wrapper class to call with all arguments and that returns appropriate data_loaders
         :param pocket_path:
@@ -114,16 +116,17 @@ class Loader():
                                            ligand_path=ligand_path,
                                            augment_flips=augment_flips,
                                            ram=ram,
-                                           debug=debug)
+                                           debug=debug,
+                                           shuffled=shuffled)
 
     @staticmethod
-    def create_dataset(pocket_path, ligand_path, augment_flips=False, ram=False, debug=False):
+    def create_dataset(pocket_path, ligand_path, augment_flips=False, ram=False, debug=False, shuffled=False):
         if ram:
             return Conv3DDatasetRam(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips,
-                                    debug=debug)
+                                    debug=debug, shuffled=shuffled)
         else:
             return Conv3DDatasetHard(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips,
-                                     debug=debug)
+                                     debug=debug, shuffled=shuffled)
 
     def get_data(self):
         n = len(self.dataset)
@@ -205,16 +208,20 @@ class Conv3DDatasetHard(Dataset):
     """
 
     def __init__(self, pocket_path, ligand_path, augment_flips,
-                 debug):
+                 debug, shuffled):
         self.debug = debug
         self.path = pocket_path
-        self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
+        if not shuffled:
+            self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
+            print('not shuffled data')
 
-        # import random
-        # ligands_dict = pickle.load(open(ligand_path, 'rb'))
-        # keys = ligands_dict.keys()
-        # random.shuffle(keys)
-        # self.ligands_dict = dict(zip(keys, ligands_dict.values()))
+        else:
+            import random
+            ligands_dict = pickle.load(open(ligand_path, 'rb'))
+            keys = list(ligands_dict.keys())
+            random.shuffle(keys)
+            self.ligands_dict = dict(zip(keys, ligands_dict.values()))
+            print('shuffled data')
 
         self.augment_flips = augment_flips
         self.pockets = sorted(os.listdir(pocket_path))
@@ -278,10 +285,20 @@ class Conv3DDatasetRam(Dataset):
     Loads the whole data we will iterate on in the RAM and returns a Dataset object to access it
     """
 
-    def __init__(self, pocket_path, ligand_path, augment_flips, debug):
+    def __init__(self, pocket_path, ligand_path, augment_flips, debug, shuffled):
         self.debug = debug
 
-        self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
+        if not shuffled:
+            self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
+            print('not shuffled data')
+
+        else:
+            import random
+            ligands_dict = pickle.load(open(ligand_path, 'rb'))
+            keys = list(ligands_dict.keys())
+            random.shuffle(keys)
+            self.ligands_dict = dict(zip(keys, ligands_dict.values()))
+            print('shuffled data')
 
         self.count = 0
         self.path = pocket_path

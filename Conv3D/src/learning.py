@@ -2,6 +2,11 @@ import time
 import torch
 import sys
 import pickle
+
+if __name__ == "__main__":
+    import sys
+    sys.path.append('../')
+
 from src.utils import debug_memory, ES
 
 

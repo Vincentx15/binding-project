@@ -5,11 +5,16 @@ parser.add_argument("-p", "--parallel", default=True, help="If we don't want to 
                     action='store_false')
 parser.add_argument("-s", "--siamese", default=True, help="If we don't want to use siamese loading",
                     action='store_false')
+parser.add_argument("--shuffled", default=False, help="If we want to use shuffled labels",
+                    action='store_true')
 parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
                     help="choose the way to load data")
 parser.add_argument("-po", "--pockets", default='unique_pockets_hard',
                     choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
+parser.add_argument("-m", "--model", default='baby',
+                    choices=['baby', 'small', 'se3cnn', 'c3d'],
+                    help="choose the model")
 parser.add_argument("-bs", "--batch_size", type=int, default=128, help="choose the batch size")
 parser.add_argument("-nw", "--workers", type=int, default=20, help="Number of workers to load data")
 parser.add_argument("-wt", "--wall_time", type=int, default=None, help="Max time to run the model")
@@ -27,15 +32,6 @@ import os
 from src.utils import Tensorboard, mkdirs
 import src.learning as learn
 from data.loader import Loader
-
-from models.BabyC3D import BabyC3D
-from models.SmallC3D import SmallC3D
-from models.Se3cnn import Se3cnn
-
-# from models.Toy import Toy
-# from models.C3D import C3D
-
-print('Done importing')
 
 '''
 Hardware settings
@@ -76,16 +72,18 @@ elif args.data_loading == 'hram':
 else:
     raise ValueError('Not implemented this DataLoader yet')
 
-batch_size = 8
-# batch_size = args.batch_size
+# batch_size = 8
+batch_size = args.batch_size
 num_workers = args.workers
+shuffled = args.shuffled
 siamese = args.siamese
+print(f'{shuffled} in main')
 
 print(f'Using batch_size of {batch_size}, {"siamese" if siamese else "serial"} loading')
 
 loader = Loader(pocket_path=pocket_path, ligand_path='data/ligands/whole_dict_embed_128.p',
                 batch_size=batch_size, num_workers=num_workers, siamese=siamese,
-                augment_flips=augment_flips, ram=ram)
+                augment_flips=augment_flips, ram=ram, shuffled=shuffled)
 train_loader, _, test_loader = loader.get_data()
 
 print('Created data loader')
@@ -103,11 +101,30 @@ if len(train_loader) == 0 & len(test_loader) == 0:
 '''
 Model loading
 '''
-# model = Toy()
-# model = C3D()
-# model = SmallC3D()
-# model = BabyC3D()
-model = Se3cnn()
+
+model_choice = args.model
+model = 0
+
+if model_choice == 'baby':
+    from models.BabyC3D import BabyC3D
+
+    model = BabyC3D()
+elif model_choice == 'small':
+    from models.SmallC3D import SmallC3D
+
+    model = SmallC3D()
+elif model_choice == 'se3cnn':
+    from models.Se3cnn import Se3cnn
+
+    model = Se3cnn()
+elif model_choice == 'c3d':
+    from models.C3D import C3D
+
+    model = C3D()
+else:
+    # Not possible because of argparse
+    raise ValueError('Not a possible model')
+
 model.to(device)
 
 print(f'Using {model.__class__} as model')
@@ -171,21 +188,3 @@ learn.train_model(model=model,
                   num_epochs=400,
                   wall_time=wall_time)
 
-'''
-Dataloader creation
-'''
-# if args.data_loading == 'hard':
-#     from data.dataset_loader_hard import get_data
-# elif args.data_loading == 'ram':
-#     from data.dataset_loader_ram import get_data
-# elif args.data_loading == 'hram':
-#     from data.dataset_loader_hardram import get_data
-# else:
-#     from data.dataset_loader import get_data
-
-# batch_size = 8
-# # batch_size = args.batch_size
-# # num_workers = 6 * used_gpus_count
-# num_workers = 20
-# train_loader, valid_loader, test_loader = get_data(batch_size=batch_size, num_workers=num_workers)
-# print('Created data loader')

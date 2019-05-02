@@ -1,6 +1,10 @@
 import time
 import torch
 import sys
+
+if __name__ == "__main__":
+    sys.path.append('../')
+
 from src.utils import debug_memory
 
 
@@ -22,7 +26,7 @@ def test(model, test_loader, test_loss_fn, device):
         output = model(inputs)
         test_size += len(inputs)
         test_loss += test_loss_fn(output, targets).item()
-        if not batch_idx % 50 :
+        if not batch_idx % 50:
             print('Computed {:.2f} batches for the test'.format(batch_idx))
     test_loss /= test_size
     return test_loss
@@ -82,7 +86,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
             print(torch.cuda.memory_cached(device=device))
 
             torch.cuda.synchronize()  # wait for mm to finish
-         
+
             loss = criterion(out, labels)
             loss.backward()
 
@@ -90,7 +94,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
             print(torch.cuda.memory_cached(device=device))
 
             torch.cuda.synchronize()  # wait for mm to finish
-            
+
             optimizer.step()
             optimizer.zero_grad()
 
@@ -164,4 +168,3 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
             if time_elapsed * (1 + 1 / (epoch + 1)) > .95 * wall_time * 3600:
                 break
     return best_loss
-

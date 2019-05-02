@@ -5,12 +5,14 @@ import multiprocessing as mlt
 import numpy as np
 import pickle
 import csv
-
-from utils import write_error_log
-
 import torch
 from torch.utils.data.dataset import Dataset
 from torch.utils.data import DataLoader
+import sys
+
+if __name__ == "__main__":
+    sys.path.append('../')
+from data.utils import write_error_log
 
 """
 Script to :
