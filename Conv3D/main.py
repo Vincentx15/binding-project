@@ -77,7 +77,7 @@ batch_size = args.batch_size
 num_workers = args.workers
 shuffled = args.shuffled
 siamese = args.siamese
-print(f'{shuffled} in main')
+
 
 print(f'Using batch_size of {batch_size}, {"siamese" if siamese else "serial"} loading')
 
@@ -107,8 +107,10 @@ model = 0
 
 if model_choice == 'baby':
     from models.BabyC3D import BabyC3D
+    # from models.BabyC3D import Crazy
 
     model = BabyC3D()
+    # model = Crazy()
 elif model_choice == 'small':
     from models.SmallC3D import SmallC3D
 

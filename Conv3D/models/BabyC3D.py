@@ -1,6 +1,41 @@
 import torch.nn as nn
 
 
+class Crazy(nn.Module):
+    def __init__(self):
+        super(Crazy, self).__init__()
+        import pickle
+        import torch
+        ligand_path = 'data/ligands/whole_dict_embed_128.p'
+        ligands_dict = pickle.load(open(ligand_path, 'rb'))
+        import numpy as np
+        lig_emb = np.array(list(ligands_dict.values()))
+        avg = np.mean(lig_emb, axis=0)[:, np.newaxis].T
+        print(avg.shape)
+        self.avg = torch.Tensor(avg).cuda()
+        print(self.avg.size())
+        self.group1 = nn.Linear(128, 128)
+
+
+    '''
+    (1, 128)
+    torch.Size([1, 128])
+    '''
+
+    def forward(self, x):
+        x = x.view(1, -1)[:, :128]
+        # print('x', x.size())
+        # print('avg', self.avg.size())
+        out = self.avg + 0.00000001 * self.group1(x)
+        # print('out', out.size())
+        return out
+
+
+'''
+first     torch.Size([128, 512])
+second torch.Size([128, 128])
+'''
+
 # C3D Model
 class BabyC3D(nn.Module):
     def __init__(self):

@@ -101,6 +101,7 @@ def mkdirs(name, permissive=True):
     """
     log_path = os.path.join('logs', name)
     save_path = os.path.join('trained_models', name)
+    print(save_path)
     try:
         os.mkdir(log_path)
         os.mkdir(save_path)
