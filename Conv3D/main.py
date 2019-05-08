@@ -3,8 +3,10 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--parallel", default=True, help="If we don't want to run thing in parallel",
                     action='store_false')
-parser.add_argument("-s", "--siamese", default=True, help="If we don't want to use siamese loading",
-                    action='store_false')
+parser.add_argument("-s", "--siamese", default=False, help="If we want to use siamese loading",
+                    action='store_true')
+parser.add_argument("-fs", "--full_siamese", default=False, help="If we want to use the full_siamese loading",
+                    action='store_true')
 parser.add_argument("--shuffled", default=False, help="If we want to use shuffled labels",
                     action='store_true')
 parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
@@ -13,7 +15,7 @@ parser.add_argument("-po", "--pockets", default='unique_pockets_hard',
                     choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
 parser.add_argument("-m", "--model", default='baby',
-                    choices=['baby', 'small', 'se3cnn', 'c3d'],
+                    choices=['baby', 'small', 'se3cnn', 'c3d', 'small_siamese'],
                     help="choose the model")
 parser.add_argument("-bs", "--batch_size", type=int, default=128, help="choose the batch size")
 parser.add_argument("-nw", "--workers", type=int, default=20, help="Number of workers to load data")
@@ -77,12 +79,15 @@ batch_size = args.batch_size
 num_workers = args.workers
 shuffled = args.shuffled
 siamese = args.siamese
-
-
-print(f'Using batch_size of {batch_size}, {"siamese" if siamese else "serial"} loading')
+full_siamese = args.full_siamese
+if full_siamese:
+    print(f'Using the full siamese pipeline, with batch size of {batch_size}')
+    siamese = False
+else:
+    print(f'Using batch_size of {batch_size}, {"siamese" if siamese else "serial"} loading')
 
 loader = Loader(pocket_path=pocket_path, ligand_path='data/ligands/whole_dict_embed_128.p',
-                batch_size=batch_size, num_workers=num_workers, siamese=siamese,
+                batch_size=batch_size, num_workers=num_workers, siamese=siamese, full_siamese=full_siamese,
                 augment_flips=augment_flips, ram=ram, shuffled=shuffled)
 train_loader, _, test_loader = loader.get_data()
 
@@ -107,6 +112,7 @@ model = 0
 
 if model_choice == 'baby':
     from models.BabyC3D import BabyC3D
+
     # from models.BabyC3D import Crazy
 
     model = BabyC3D()
@@ -123,6 +129,10 @@ elif model_choice == 'c3d':
     from models.C3D import C3D
 
     model = C3D()
+elif model_choice == 'small_siamese':
+    from models.Siamese import BabySiamese, SmallSiamese
+    # model = BabySiamese()
+    model = SmallSiamese()
 else:
     # Not possible because of argparse
     raise ValueError('Not a possible model')
@@ -189,4 +199,3 @@ learn.train_model(model=model,
                   writer=writer,
                   num_epochs=400,
                   wall_time=wall_time)
-

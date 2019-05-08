@@ -11,6 +11,8 @@ import threading as th
 '''
 Data generation process, we can choose to read a preprocessed version or to augment it on the fly
 One can also choose to load everything in RAM to speed up the process
+One can use siamese of even full siamese loading where the batch is respectively composed of flips groups or even of
+batches of objects of shape 8,4,42,32,32 that have to be dealt with differently
 '''
 
 
@@ -99,7 +101,8 @@ class Loader():
                  ram=False,
                  siamese=False,
                  debug=False,
-                 shuffled=False):
+                 shuffled=False,
+                 full_siamese=False):
         """
         Wrapper class to call with all arguments and that returns appropriate data_loaders
         :param pocket_path:
@@ -108,6 +111,8 @@ class Loader():
         :param num_workers:
         :param augment_flips: perform numpy flips
         :param ram: store whole thing in RAM
+        :param siamese: for the batch siamese technique
+        :param full_siamese for the true siamese one
         """
         self.siamese = siamese
         self.batch_size = batch_size
@@ -117,11 +122,19 @@ class Loader():
                                            augment_flips=augment_flips,
                                            ram=ram,
                                            debug=debug,
-                                           shuffled=shuffled)
+                                           shuffled=shuffled,
+                                           full_siamese=full_siamese)
+        self.augment_flips = augment_flips
+        self.full_siamese = full_siamese
+        assert (full_siamese != siamese or siamese is False)
 
     @staticmethod
-    def create_dataset(pocket_path, ligand_path, augment_flips=False, ram=False, debug=False, shuffled=False):
-        if ram:
+    def create_dataset(pocket_path, ligand_path, full_siamese=False, augment_flips=False, ram=False, debug=False,
+                       shuffled=False):
+        if full_siamese:
+            return Conv3DDatasetSiamese(pocket_path=pocket_path, ligand_path=ligand_path, debug=debug,
+                                        shuffled=shuffled)
+        elif ram:
             return Conv3DDatasetRam(pocket_path=pocket_path, ligand_path=ligand_path, augment_flips=augment_flips,
                                     debug=debug, shuffled=shuffled)
         else:
@@ -138,10 +151,14 @@ class Loader():
         split_train, split_valid = 0.7, 0.85
         train_index, valid_index = int(split_train * n), int(split_valid * n)
         # print(train_index, valid_index)
-        train_index, valid_index = train_index - train_index % 8, valid_index - valid_index % 8
         # print(train_index, valid_index)
 
-        indices = [item for sublist in BatchSampler(self.batch_size, n) for item in sublist]
+        # If we precompute the augmentations, we need to split the different flips in different subsets
+        if self.augment_flips or self.full_siamese:
+            indices = list(range(n))
+        else:
+            indices = [item for sublist in BatchSampler(self.batch_size, n) for item in sublist]
+            train_index, valid_index = train_index - train_index % 8, valid_index - valid_index % 8
 
         train_indices = indices[:train_index]
         valid_indices = indices[train_index:valid_index]
@@ -362,15 +379,91 @@ class Conv3DDatasetRam(Dataset):
         return pocket_tensor, ligand_embedding
 
 
+class Conv3DDatasetSiamese(Dataset):
+    """
+    Uses an unaugmented dataset and does the flipping on the fly (probably faster than loading everything anyway)
+    """
+
+    def __init__(self, pocket_path, ligand_path, debug, shuffled):
+        self.debug = debug
+        self.path = pocket_path
+        if not shuffled:
+            self.ligands_dict = pickle.load(open(ligand_path, 'rb'))
+            print('not shuffled data')
+
+        else:
+            import random
+            ligands_dict = pickle.load(open(ligand_path, 'rb'))
+            keys = list(ligands_dict.keys())
+            random.shuffle(keys)
+            self.ligands_dict = dict(zip(keys, ligands_dict.values()))
+            print('shuffled data')
+        self.pockets = sorted(os.listdir(pocket_path))
+
+    def __len__(self):
+        return len(self.pockets)
+
+    def __getitem__(self, item):
+        """
+        :param item:
+        :return:
+        """
+        if self.debug:
+            return 0, 0, self.pockets[item]
+
+        pdb = self.pockets[item]
+
+        pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
+        pocket_tensor = torch.from_numpy(pocket_tensor)
+        res = [pocket_tensor]
+
+        for i in range(1, 8):
+            pass
+            res.append(flip(pocket_tensor, i))
+
+        tensor = torch.stack(res)
+        # print(tensor.size())
+        tensor = tensor.float()
+        # self.cast += time.perf_counter() - a
+
+        _, ligand_id, *_ = pdb.split('_')
+        ligand_embedding = self.ligands_dict[ligand_id]
+        ligand_embedding = torch.from_numpy(ligand_embedding)
+
+        return tensor, ligand_embedding
+
+
 if __name__ == '__main__':
     import time
 
-    batch_size = 4
-    num_workers = 1
+    # batch_size = 1
+    # num_workers = 1
+    # print('Creation : ')
+    # a = time.perf_counter()
+    # train_loader, _, _ = get_data(pocket_path='pockets/unique_pockets',
+    #                               ligand_path='ligands/whole_dict_embed_128.p',
+    #                               batch_size=batch_size, num_workers=num_workers, shuffled=False)
+    #
+    # print('Done in : ', time.perf_counter() - a)
+    # print()
+    #
+    # print('Use : ')
+    # a = time.perf_counter()
+    #
+    # for batch_idx, (inputs, labels) in enumerate(train_loader):
+    #     if not batch_idx % 20:
+    #         print(batch_idx, time.perf_counter() - a)
+    #         a = time.perf_counter()
+    # print('Done in : ', time.perf_counter() - a)
+
+    batch_size = 16
+    num_workers = 4
     print('Creation : ')
     a = time.perf_counter()
-    loader = Loader(pocket_path='pockets/unique_pockets_hard', ligand_path='ligands/whole_dict_embed_128.p',
-                    batch_size=batch_size, num_workers=num_workers, augment_flips=False, ram=True)
+    loader = Loader(pocket_path='pockets/unique_pockets', ligand_path='ligands/whole_dict_embed_128.p',
+                    batch_size=batch_size, num_workers=num_workers, full_siamese=True)
+    # loader = Loader(pocket_path='pockets/unique_pockets_hard', ligand_path='ligands/whole_dict_embed_128.p',
+    #                 batch_size=batch_size, num_workers=num_workers, augment_flips=False, ram=False)
     print(len(loader.dataset))
     train_loader, _, test_loader = loader.get_data()
 
@@ -380,8 +473,11 @@ if __name__ == '__main__':
     print('Use : ')
     a = time.perf_counter()
 
+    loop = time.perf_counter()
     for batch_idx, (inputs, labels) in enumerate(train_loader):
+        print(inputs.size())
+        inputs.cuda()
         if not batch_idx % 20:
-            print(batch_idx, time.perf_counter() - a)
-            a = time.perf_counter()
+            print(batch_idx, time.perf_counter() - loop)
+            loop = time.perf_counter()
     print('Done in : ', time.perf_counter() - a)

@@ -107,6 +107,8 @@ def run_model(data_loader, model, model_weights_path):
     predictions = dict()
     with torch.no_grad():
         for batch_idx, (id, inputs) in enumerate(data_loader):
+            if not batch_idx%20:
+                print(f'processed {batch_idx} batches')
             inputs = inputs.to(device)
             out = model(inputs).cpu()
             for idx, pocket in enumerate(id):
@@ -221,7 +223,10 @@ def reduce_preds(preds):
         reduced = {}
         for pdb, dic_ligs in preds.items():
             for ligand, tensor in dic_ligs.items():
+                # Works also if we only have one prediction
+                # tensor = [torch.zeros(128)]
                 avg = torch.stack(tensor, 1).mean(dim=1)
+                # print(avg.size())
                 if pdb not in reduced:
                     reduced[pdb] = {ligand: avg}
                 else:
@@ -250,7 +255,7 @@ def get_distances(model_name='test_load'):
         true = emb[ligand]
         for pdb in pdb_list:
             pred = reduced[pdb][ligand].cpu().numpy()
-            dist = sp.distance.euclidean(pred, true)
+            dist = sp.distance.euclidean(pred, true)**2
             temp.append((pdb, dist / 128))
         lig_dists[ligand] = temp
     pickle.dump(lig_dists, open(f'../data/post_processing/distances/{model_name}.p', 'wb'))
@@ -263,10 +268,10 @@ if __name__ == "__main__":
     model_name = args.name
 
     # make ligand_to_pdb dict
-    ligand_to_pdb()
+    # ligand_to_pdb()
 
     # Get prediction for the argparse arguments
-    make_predictions(model_choice=model_choice, model_name=model_name)
+    # make_predictions(model_choice=model_choice, model_name=model_name)
 
     # Get the ligands : distance distribution
     lig_dist = get_distances(model_name)
