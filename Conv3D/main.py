@@ -15,7 +15,7 @@ parser.add_argument("-po", "--pockets", default='unique_pockets_hard',
                     choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
 parser.add_argument("-m", "--model", default='baby',
-                    choices=['baby', 'small', 'se3cnn', 'c3d', 'small_siamese'],
+                    choices=['baby', 'small', 'se3cnn', 'c3d', 'small_siamese', 'babyse3cnn'],
                     help="choose the model")
 parser.add_argument("-bs", "--batch_size", type=int, default=128, help="choose the batch size")
 parser.add_argument("-nw", "--workers", type=int, default=20, help="Number of workers to load data")
@@ -31,7 +31,7 @@ import time
 import os
 
 # Homemade modules
-from src.utils import Tensorboard, mkdirs
+from src.utils import Tensorboard, mk_log_trained_dirs
 import src.learning as learn
 from data.loader import Loader
 
@@ -131,8 +131,14 @@ elif model_choice == 'c3d':
     model = C3D()
 elif model_choice == 'small_siamese':
     from models.Siamese import BabySiamese, SmallSiamese
+
     # model = BabySiamese()
+
     model = SmallSiamese()
+elif model_choice == 'babyse3cnn':
+    from models.BabySe3cnn import BabySe3cnn
+
+    model = BabySe3cnn()
 else:
     # Not possible because of argparse
     raise ValueError('Not a possible model')
@@ -157,7 +163,7 @@ optimizer = optim.Adam(model.parameters())
 Experiment Setup
 '''
 name = args.name
-log_folder, result_folder = mkdirs(name)
+log_folder, result_folder = mk_log_trained_dirs(name)
 writer = Tensorboard(log_folder)
 
 print(f'Saving result in {name}')

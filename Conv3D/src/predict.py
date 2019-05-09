@@ -125,7 +125,7 @@ def make_predictions(model_choice, model_name):
     :param model_name:
     :return:
     """
-    batch_size = 8
+    batch_size = 64
     num_workers = 20
 
     torch.multiprocessing.set_sharing_strategy('file_system')
