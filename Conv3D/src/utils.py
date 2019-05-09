@@ -54,9 +54,11 @@ class Tensorboard:
         self.writer.flush()
 
     def log_histogram(self, tag, values, global_step, bins):
+        # import Tensorflow as tf
         counts, bin_edges = np.histogram(values, bins=bins)
 
-        hist = tf.HistogramProto()
+        hist = 0
+        # hist = tf.HistogramProto()
         hist.min = float(np.min(values))
         hist.max = float(np.max(values))
         hist.num = int(np.prod(values.shape))
@@ -92,7 +94,7 @@ class Tensorboard:
         self.writer.flush()
 
 
-def mkdirs(name, permissive=True):
+def mk_log_trained_dirs(name, permissive=True):
     """
     Try to make the logs folder
     :param name:
@@ -102,14 +104,39 @@ def mkdirs(name, permissive=True):
     log_path = os.path.join('logs', name)
     save_path = os.path.join('trained_models', name)
     print(save_path)
-    try:
-        os.mkdir(log_path)
-        os.mkdir(save_path)
-    except FileExistsError:
-        if not permissive:
-            raise ValueError('This name is already taken !')
+    mkdir(log_path)
+    mkdir(save_path)
     save_name = os.path.join(save_path, name + '.pth')
     return log_path, save_name
+
+
+def mkdir(path, permissive=True):
+    """
+    Permissive path making
+    :param path:
+    :param permissive:
+    :return:
+    """
+    try:
+        os.mkdir(path)
+    except FileExistsError:
+        if not permissive:
+            raise ValueError(f'The path : "{path}" is already taken !')
+
+
+def setup_dirs():
+    """
+    To be called from main
+    Adds all ignored features
+    :return:
+    """
+    mkdir('data/post_processing')
+    mkdir('data/post_processing/distances')
+    mkdir('data/post_processing/predictions')
+    mkdir('data/post_processing/utils')
+    mkdir('logs')
+    mkdir('trained_models')
+    print('Done creating files')
 
 
 def debug_memory():
@@ -155,19 +182,27 @@ def ES_batch(labels, preds, trues, threshold):
     return score
 
 
-
 if __name__ == '__main__':
     pass
-    import pickle
 
-    labels = pickle.load(open('../data/ligands/whole_dict_embed_128.p', 'rb'))
-    trues = list(labels.values())[:128]
-    preds = list(labels.values())
-    np.random.shuffle(preds)
-    preds = preds[:128]
+    import argparse
 
-    score = ES_batch(labels, preds, trues, 50)
-    print(score)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--setup", default=False, help="For file setup",action='store_true')
+    args = parser.parse_args()
+
+    if args.setup:
+        setup_dirs()
+    # import pickle
+    #
+    # labels = pickle.load(open('../data/ligands/whole_dict_embed_128.p', 'rb'))
+    # trues = list(labels.values())[:128]
+    # preds = list(labels.values())
+    # np.random.shuffle(preds)
+    # preds = preds[:128]
+    #
+    # score = ES_batch(labels, preds, trues, 50)
+    # print(score)
     # for key, value in labels.items():
     #     tensor = torch.from_numpy(value)
     #     labels[key] = tensor
