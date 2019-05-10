@@ -96,7 +96,7 @@ class Tensorboard:
 
 def mk_log_trained_dirs(name, permissive=True):
     """
-    Try to make the logs folder
+    Try to make the logs and trained_models folder
     :param name:
     :param permissive: If True will overwrite existing files (good for debugging)
     :return:
@@ -130,7 +130,24 @@ def setup_dirs():
     Adds all ignored features
     :return:
     """
-    mkdir('test')
+    mkdir('data/post_processing/distances')
+    mkdir('data/post_processing/predictions')
+    mkdir('data/post_processing/utils')
+    mkdir('logs')
+    mkdir('trained_models')
+    print('Done creating files')
+
+
+def del_experiment(name='default'):
+    """
+    After a fail one, remove its log and trained models
+    :param name: name of the experiment to remove
+    :return:
+    """
+    import shutil
+    shutil.rmtree(os.path.join('logs', name))
+    shutil.rmtree(os.path.join('trained_models', name))
+    print('Succesfully deleted')
 
 
 def debug_memory():
@@ -182,11 +199,15 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--setup", default=False, help="For file setup",action='store_true')
+    parser.add_argument("-s", "--setup", default=False, help="For file setup", action='store_true')
+    parser.add_argument("-n", "--name", type=str, default=None, help="Name of a log to clean")
     args = parser.parse_args()
 
     if args.setup:
         setup_dirs()
+
+    if args.name:
+        del_experiment(args.name)
     # import pickle
     #
     # labels = pickle.load(open('../data/ligands/whole_dict_embed_128.p', 'rb'))

@@ -12,7 +12,12 @@ obtained in the cddd subproject.
 The software requirements and version are stated in requirements.txt
 
 ##Setup
-Mostly data to retrieve. It should be available for download or contact the authors.
+Mostly data to retrieve. One should run 
+ ```bash
+ python src/utils.py -s
+  ```
+  for basic file setup.
+ It should be available for download or contact the authors.
 The data must be saved in pockets/unique_pockets (resp unique_pockets_hard) and the
 ligand file should be saved in ligands/whole_dict_embed_128.p
 Then the environment should be created either as a conda environment or running the setup
@@ -49,6 +54,3 @@ The dir to which logs are saved
 
 ## saved models
 The serialised neural nets
-
-
-## logs
