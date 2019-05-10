@@ -186,6 +186,7 @@ def make_predictions(model_choice, model_name):
         # Not possible because of argparse
         raise ValueError('Not a possible model')
     model.to(device)
+    model = torch.nn.DataParallel(model)
 
     # import torch.optim as optim
     # optimizer = optim.Adam(None)
