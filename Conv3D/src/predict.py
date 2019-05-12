@@ -1,27 +1,28 @@
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-m", "--model", default='baby',
-                    choices=['baby', 'small', 'se3cnn', 'c3d'],
-                    help="kind of models to use")
-
-parser.add_argument("-m", "--model", default='baby',
-                    choices=['baby', 'small', 'se3cnn', 'c3d', 'small_siamese', 'babyse3cnn'],
-                    help="choose the model")
-
-parser.add_argument("-n", "--name", type=str, default='test_load', help="Name of the trained model to use")
-
+parser.add_argument("-p", "--parallel", default=True, help="If we don't want to run thing in parallel",
+                    action='store_false')
 parser.add_argument("-s", "--siamese", default=False, help="If we want to use siamese loading",
                     action='store_true')
 parser.add_argument("-fs", "--full_siamese", default=False, help="If we want to use the full_siamese loading",
+                    action='store_true')
+parser.add_argument("--shuffled", default=False, help="If we want to use shuffled labels",
                     action='store_true')
 parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
                     help="choose the way to load data")
 parser.add_argument("-po", "--pockets", default='unique_pockets_hard',
                     choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
+parser.add_argument("-m", "--model", default='baby',
+                    choices=['baby', 'small', 'se3cnn', 'c3d', 'small_siamese', 'baby_siamese', 'babyse3cnn'],
+                    help="choose the model")
+parser.add_argument("-bs", "--batch_size", type=int, default=128, help="choose the batch size")
+parser.add_argument("-nw", "--workers", type=int, default=20, help="Number of workers to load data")
+parser.add_argument("-wt", "--wall_time", type=int, default=None, help="Max time to run the model")
+parser.add_argument("-n", "--name", type=str, default='default_name', help="Name for the logs")
 
-args = parser.parse_args()
+args = parser.parse_known_args()[0]
 
 import numpy as np
 import time
@@ -31,11 +32,12 @@ import pickle
 from collections import defaultdict
 from torch.utils.data.dataset import Dataset
 from torch.utils.data import Subset, DataLoader
+from data.loader import Loader
 
 if __name__ == "__main__":
     sys.path.append('../')
 
-from ..data.loader import Loader
+
 
 """
 Class for prediction, we want to know our model prediction on the dataset. Siamese ones will average the results
@@ -67,7 +69,7 @@ class Evaluation(Dataset):
         pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
         pocket_tensor = torch.from_numpy(pocket_tensor)
         pocket_tensor = pocket_tensor.float()
-        return pdb, pocket_tensor , 0
+        return pdb, pocket_tensor, 0
 
 
 def all_ligand_to_pdb(path='unique_pockets'):
@@ -77,7 +79,7 @@ def all_ligand_to_pdb(path='unique_pockets'):
     """
 
     ligand_to_pdb = defaultdict(list)
-    pathlist = os.listdir('../data/pockets/'+ path)
+    pathlist = os.listdir('../data/pockets/' + path)
     for i, path in enumerate(pathlist):
         pdb, ligand = path[0].split('_')[0:2]
         ligand_to_pdb[ligand].append(pdb)
@@ -102,7 +104,7 @@ def ligand_to_pdb(loader):
         if not i % 1000:
             print(i)
 
-    pickle.dump(ligand_to_pdb, open('../data/post_processing/utils/lig_to_pdb.p', 'wb'))
+    pickle.dump(ligand_to_pdb, open('../data/post_processing/utils/all_lig_to_pdb.p', 'wb'))
     print('ligand_to_pdb done')
     return ligand_to_pdb
 
@@ -128,7 +130,7 @@ def run_model(data_loader, model, model_weights_path):
     predictions = dict()
     with torch.no_grad():
         for batch_idx, (pdb, inputs, labels) in enumerate(data_loader):
-            if not batch_idx%20:
+            if not batch_idx % 20:
                 print(f'processed {batch_idx} batches')
             inputs = inputs.to(device)
             out = model(inputs).cpu()
@@ -147,12 +149,11 @@ def make_predictions(model_choice, model_name, loader):
     :return:
     """
 
-
     torch.multiprocessing.set_sharing_strategy('file_system')
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # I made a mistake in the saving script
-    model_path = os.path.join('../trained_models', model_name, model_name + '.pth')
+    model_path = os.path.join('trained_models', model_name, model_name + '.pth')
 
     if model_choice == 'baby':
         from models.BabyC3D import BabyC3D
@@ -173,6 +174,18 @@ def make_predictions(model_choice, model_name, loader):
         from models.C3D import C3D
 
         model = C3D()
+    elif model_choice == 'small_siamese':
+        from models.Siamese import SmallSiamese
+
+        model = SmallSiamese()
+    elif model_choice == 'baby_siamese':
+        from models.Siamese import BabySiamese
+
+        model = BabySiamese()
+    elif model_choice == 'babyse3cnn':
+        from models.BabySe3cnn import BabySe3cnn
+
+        model = BabySe3cnn()
     else:
         # Not possible because of argparse
         raise ValueError('Not a possible model')
@@ -228,7 +241,7 @@ def reduce_preds(preds):
 
 def get_distances(model_name='test_load'):
     # Get predictions
-    pred_path = os.path.join('../data/post_processing/predictions/', model_name+'.p')
+    pred_path = os.path.join('../data/post_processing/predictions/', model_name + '.p')
     predictions = pickle.load(open(pred_path, 'rb'))
 
     # reduce them
@@ -249,7 +262,7 @@ def get_distances(model_name='test_load'):
             if pdb not in reduced:
                 continue
             pred = reduced[pdb][ligand].cpu().numpy()
-            dist = sp.distance.euclidean(pred, true)**2
+            dist = sp.distance.euclidean(pred, true) ** 2
             temp.append((pdb, dist / 128))
 
         lig_dists[ligand] = temp
@@ -262,7 +275,7 @@ if __name__ == "__main__":
     model_choice = args.model
     model_name = args.name
 
-    pocket_file = 'data/pockets/'
+    pocket_file = '../data/pockets/'
     pocket_data = args.pockets
     pocket_path = os.path.join(pocket_file, pocket_data)
     print(f'Using {pocket_path} as the pocket inputs')
@@ -294,7 +307,7 @@ if __name__ == "__main__":
     else:
         print(f'Using batch_size of {batch_size}, {"siamese" if siamese else "serial"} loading')
 
-    loader = Loader(pocket_path=pocket_path, ligand_path='data/ligands/whole_dict_embed_128.p',
+    loader = Loader(pocket_path=pocket_path, ligand_path='../data/ligands/whole_dict_embed_128.p',
                     batch_size=batch_size, num_workers=num_workers, siamese=siamese, full_siamese=full_siamese,
                     augment_flips=augment_flips, ram=ram, shuffled=shuffled)
     train_loader, _, test_loader = loader.get_data()
@@ -302,11 +315,13 @@ if __name__ == "__main__":
     # make ligand_to_pdb dict
     # test_loader.dataset.debug = True
     # ligand_to_pdb(loader=test_loader)
+    all_ligand_to_pdb()
 
     # Get prediction for the argparse arguments
     test_loader.dataset.debug = False
     make_predictions(model_choice=model_choice, model_name=model_name, loader=test_loader)
 
     # Get the ligands : distance distribution
-    lig_dist = get_distances(model_name)
-    print(lig_dist)
+    # lig_dist = get_distances('small_siamsplit_aligned_flips')
+    # lig_dist = get_distances(model_name)
+    # print(lig_dist)

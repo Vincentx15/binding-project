@@ -15,7 +15,7 @@ parser.add_argument("-po", "--pockets", default='unique_pockets_hard',
                     choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
                     help="choose the data to use for the pocket inputs")
 parser.add_argument("-m", "--model", default='baby',
-                    choices=['baby', 'small', 'se3cnn', 'c3d', 'small_siamese', 'babyse3cnn'],
+                    choices=['baby', 'small', 'se3cnn', 'c3d', 'small_siamese', 'baby_siamese', 'babyse3cnn'],
                     help="choose the model")
 parser.add_argument("-bs", "--batch_size", type=int, default=128, help="choose the batch size")
 parser.add_argument("-nw", "--workers", type=int, default=20, help="Number of workers to load data")
@@ -130,11 +130,13 @@ elif model_choice == 'c3d':
 
     model = C3D()
 elif model_choice == 'small_siamese':
-    from models.Siamese import BabySiamese, SmallSiamese
-
-    # model = BabySiamese()
+    from models.Siamese import SmallSiamese
 
     model = SmallSiamese()
+elif model_choice == 'baby_siamese':
+    from models.Siamese import BabySiamese
+
+    model = BabySiamese()
 elif model_choice == 'babyse3cnn':
     from models.BabySe3cnn import BabySe3cnn
 
