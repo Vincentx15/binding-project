@@ -279,7 +279,7 @@ class Conv3DDatasetHard(Dataset):
         ligand_embedding = self.ligands_dict[ligand_id]
         ligand_embedding = torch.from_numpy(ligand_embedding)
 
-        return pocket_tensor, ligand_embedding
+        return pdb, pocket_tensor, ligand_embedding
 
 
 def read(x):
@@ -376,7 +376,7 @@ class Conv3DDatasetRam(Dataset):
         ligand_embedding = self.ligands_dict[ligand_id]
         ligand_embedding = torch.from_numpy(ligand_embedding)
 
-        return pocket_tensor, ligand_embedding
+        return pdb, pocket_tensor, ligand_embedding
 
 
 class Conv3DDatasetSiamese(Dataset):
@@ -409,7 +409,7 @@ class Conv3DDatasetSiamese(Dataset):
         :return:
         """
         if self.debug:
-            return 0, 0, self.pockets[item]
+            return self.pockets[item],0, 0
 
         pdb = self.pockets[item]
 
@@ -430,7 +430,7 @@ class Conv3DDatasetSiamese(Dataset):
         ligand_embedding = self.ligands_dict[ligand_id]
         ligand_embedding = torch.from_numpy(ligand_embedding)
 
-        return tensor, ligand_embedding
+        return pdb, tensor, ligand_embedding
 
 
 if __name__ == '__main__':
@@ -455,6 +455,7 @@ if __name__ == '__main__':
     #         print(batch_idx, time.perf_counter() - a)
     #         a = time.perf_counter()
     # print('Done in : ', time.perf_counter() - a)
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     batch_size = 16
     num_workers = 4
@@ -474,9 +475,9 @@ if __name__ == '__main__':
     a = time.perf_counter()
 
     loop = time.perf_counter()
-    for batch_idx, (inputs, labels) in enumerate(train_loader):
+    for batch_idx, (pdb, inputs, labels) in enumerate(train_loader):
         print(inputs.size())
-        inputs.cuda()
+        inputs.to(device)
         if not batch_idx % 20:
             print(batch_idx, time.perf_counter() - loop)
             loop = time.perf_counter()

@@ -28,8 +28,8 @@ def test(model, test_loader, test_loss_fn, device):
     test_loss = 0
     test_accuracy = 0
     test_size = len(test_loader)
-    for batch_idx, (inputs, targets) in enumerate(test_loader):
-        inputs_gpu, targets_gpu = inputs.to(device), targets.to(device)
+    for batch_idx, (pdb, inputs, labels) in enumerate(test_loader):
+        inputs_gpu, targets_gpu = inputs.to(device), labels.to(device)
         output = model(inputs_gpu)
         test_loss += test_loss_fn(output, targets_gpu).item()
 
@@ -79,7 +79,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
         running_loss = 0.0
 
         num_batches = len(train_loader)
-        for batch_idx, (inputs, labels) in enumerate(train_loader):
+        for batch_idx, (pdb, inputs, labels) in enumerate(train_loader):
             batch_size = len(inputs)
 
             inputs, labels = inputs.to(device), labels.to(device)
@@ -165,7 +165,7 @@ def make_predictions(data_loader, model, optimizer, model_weights_path):
 
     predictions = []
 
-    for batch_idx, inputs in enumerate(data_loader):
+    for batch_idx, (pdb, inputs, labels) in enumerate(data_loader):
         inputs = inputs.to(device)
         predictions.append(model(inputs))
     return predictions

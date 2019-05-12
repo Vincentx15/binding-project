@@ -177,7 +177,8 @@ class Conv3DDatasetHardCheck(Dataset):
         ligand_embedding = self.ligands_dict[ligand_id]
         ligand_embedding = torch.from_numpy(ligand_embedding)
 
-        return pocket_tensor, ligand_embedding
+        return pdb, pocket_tensor, ligand_embedding
+
 
 
 def check_data_load(pocket_path='pockets/unique_pockets/', ligand_path='ligands/whole_dict_embed_128.p',
@@ -233,7 +234,6 @@ def test_loader(pocket_file='pockets/',
                 ):
     """
     Test to load the data in a certain way for 2 epochs to see if everything works
-    One should comment all the instructions in the get_item method but add a return 'pdb' at the end of the tuple to be able to print the name fetched by the loader
     :param pocket_file:
     :param pocket_data:
     :param batch_size:
@@ -243,7 +243,7 @@ def test_loader(pocket_file='pockets/',
     :return:
     """
     import os
-    from loader import Loader
+    from .loader import Loader
 
     pocket_path = os.path.join(pocket_file, pocket_data)
 
@@ -258,7 +258,7 @@ def test_loader(pocket_file='pockets/',
     for epoch in range(2):
         print(epoch)
         print(len(train_loader))
-        for batch_idx, (inputs, labels, pdb) in enumerate(train_loader):
+        for batch_idx, (pdb, inputs, labels) in enumerate(train_loader):
             # print(f'{batch_idx} points ')
             # raise ValueError
             if not batch_idx % 100:
@@ -267,14 +267,14 @@ def test_loader(pocket_file='pockets/',
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
-        for batch_idx, (inputs, labels, pdb) in enumerate(valid_loader):
+        for batch_idx, (pdb, inputs, labels) in enumerate(valid_loader):
             if not batch_idx % 50:
                 pass
                 print(batch_idx * batch_size, ' on ', len(valid_loader) * batch_size, 'valid', pdb[:17])
                 # print(batch_idx, time.perf_counter() - a)
                 # a = time.perf_counter()
 
-        for batch_idx, (inputs, labels, pdb) in enumerate(test_loader):
+        for batch_idx, (pdb, inputs, labels) in enumerate(test_loader):
             if not batch_idx % 50:
                 pass
                 print(batch_idx * batch_size, ' on ', len(test_loader) * batch_size, 'test', pdb[:17])

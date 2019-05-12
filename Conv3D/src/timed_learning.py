@@ -21,7 +21,7 @@ def test(model, test_loader, test_loss_fn, device):
 
     test_loss = 0
     test_size = 0
-    for batch_idx, (inputs, targets) in enumerate(test_loader):
+    for batch_idx, (pdb, inputs, labels) in enumerate(test_loader):
         inputs, targets = inputs.to(device), targets.to(device)
         output = model(inputs)
         test_size += len(inputs)
@@ -66,7 +66,7 @@ def train_model(model, criterion, optimizer, device, train_loader, test_loader, 
         ttot = time.perf_counter()
 
         num_batches = len(train_loader)
-        for batch_idx, (inputs, labels) in enumerate(train_loader):
+        for batch_idx, (pdb, inputs, labels) in enumerate(train_loader):
             tloop = time.perf_counter()
 
             print('enter loop', torch.cuda.memory_allocated(device=device))

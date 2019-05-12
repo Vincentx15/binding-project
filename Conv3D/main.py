@@ -180,7 +180,7 @@ Get Summary of the model
 # print(y, y.size())
 # print('batch_y', batch_y.size())
 # raise ValueError
-from torchsummary import summary
+# from torchsummary import summary
 
 # summary(model, (4, 42, 32, 32))
 

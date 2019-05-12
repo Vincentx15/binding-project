@@ -4,7 +4,23 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--model", default='baby',
                     choices=['baby', 'small', 'se3cnn', 'c3d'],
                     help="kind of models to use")
+
+parser.add_argument("-m", "--model", default='baby',
+                    choices=['baby', 'small', 'se3cnn', 'c3d', 'small_siamese', 'babyse3cnn'],
+                    help="choose the model")
+
 parser.add_argument("-n", "--name", type=str, default='test_load', help="Name of the trained model to use")
+
+parser.add_argument("-s", "--siamese", default=False, help="If we want to use siamese loading",
+                    action='store_true')
+parser.add_argument("-fs", "--full_siamese", default=False, help="If we want to use the full_siamese loading",
+                    action='store_true')
+parser.add_argument("-d", "--data_loading", default='hard', choices=['fly', 'hard', 'ram', 'hram'],
+                    help="choose the way to load data")
+parser.add_argument("-po", "--pockets", default='unique_pockets_hard',
+                    choices=['unique_pockets', 'unique_pockets_hard', 'unaligned', 'unaligned_hard'],
+                    help="choose the data to use for the pocket inputs")
+
 args = parser.parse_args()
 
 import numpy as np
@@ -18,6 +34,8 @@ from torch.utils.data import Subset, DataLoader
 
 if __name__ == "__main__":
     sys.path.append('../')
+
+from ..data.loader import Loader
 
 """
 Class for prediction, we want to know our model prediction on the dataset. Siamese ones will average the results
@@ -49,34 +67,37 @@ class Evaluation(Dataset):
         pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
         pocket_tensor = torch.from_numpy(pocket_tensor)
         pocket_tensor = pocket_tensor.float()
-        return pdb, pocket_tensor
+        return pdb, pocket_tensor , 0
 
 
-def ligand_to_pdb():
+def all_ligand_to_pdb(path='unique_pockets'):
+    """
+    Get the ligand : pdb mapping and saves it in data/utils
+    :return:
+    """
+
+    ligand_to_pdb = defaultdict(list)
+    pathlist = os.listdir('../data/pockets/'+ path)
+    for i, path in enumerate(pathlist):
+        pdb, ligand = path[0].split('_')[0:2]
+        ligand_to_pdb[ligand].append(pdb)
+        if not i % 1000:
+            print(i)
+
+    pickle.dump(ligand_to_pdb, open(f'../data/post_processing/utils/all_lig_to_pdb.p', 'wb'))
+    print('all ligand_to_pdb done')
+    return ligand_to_pdb
+
+
+def ligand_to_pdb(loader):
     """
     Get the ligand : pdb mapping with the same splitting than the usual and saves it in data/utils
     :return:
     """
-    dataset = Evaluation(debug=True)
-    n = len(dataset)
-    np.random.seed(0)
-    split_train, split_valid = 0.7, 0.85
-    train_index, valid_index = int(split_train * n), int(split_valid * n)
-    train_index, valid_index = train_index - train_index % 8, valid_index - valid_index % 8
-
-    from data.loader import BatchSampler
-
-    indices = [item for sublist in BatchSampler(8, n) for item in sublist]
-
-    test_indices = indices[valid_index:]
-    test_set = Subset(dataset, test_indices)
-    test_loader = DataLoader(dataset=test_set,
-                             batch_sampler=BatchSampler(8, len(test_indices)),
-                             num_workers=20)
 
     ligand_to_pdb = defaultdict(list)
-    for i, item in enumerate(test_loader):
-        pdb, ligand = item[0].split('_')[0:2]
+    for i, (pdb, inputs, labels) in enumerate(loader):
+        pdb, ligand = pdb[0].split('_')[0:2]
         ligand_to_pdb[ligand].append(pdb)
         if not i % 1000:
             print(i)
@@ -106,18 +127,18 @@ def run_model(data_loader, model, model_weights_path):
 
     predictions = dict()
     with torch.no_grad():
-        for batch_idx, (id, inputs) in enumerate(data_loader):
+        for batch_idx, (pdb, inputs, labels) in enumerate(data_loader):
             if not batch_idx%20:
                 print(f'processed {batch_idx} batches')
             inputs = inputs.to(device)
             out = model(inputs).cpu()
-            for idx, pocket in enumerate(id):
+            for idx, pocket in enumerate(pdb):
                 predictions[pocket] = out[idx]
 
     return predictions
 
 
-def make_predictions(model_choice, model_name):
+def make_predictions(model_choice, model_name, loader):
     """
     Make the prediction for a class of model, trained in a file named model_name
     Saves a dict 'path like 1a0g_PMP_0.pdb.npy : predicted 128 embedding' in predictions/model_name
@@ -125,40 +146,10 @@ def make_predictions(model_choice, model_name):
     :param model_name:
     :return:
     """
-    batch_size = 64
-    num_workers = 20
+
 
     torch.multiprocessing.set_sharing_strategy('file_system')
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
-    dataset = Evaluation()
-    n = len(dataset)
-    np.random.seed(0)
-    split_train, split_valid = 0.7, 0.85
-    train_index, valid_index = int(split_train * n), int(split_valid * n)
-    train_index, valid_index = train_index - train_index % 8, valid_index - valid_index % 8
-
-    from data.loader import BatchSampler
-
-    indices = [item for sublist in BatchSampler(batch_size, n) for item in sublist]
-
-    train_indices = indices[:train_index]
-    valid_indices = indices[train_index:valid_index]
-    test_indices = indices[valid_index:]
-
-    train_set = Subset(dataset, train_indices)
-    valid_set = Subset(dataset, valid_indices)
-    test_set = Subset(dataset, test_indices)
-
-    train_loader = DataLoader(dataset=train_set,
-                              batch_sampler=BatchSampler(batch_size, len(train_indices)),
-                              num_workers=num_workers)
-    valid_loader = DataLoader(dataset=valid_set,
-                              batch_sampler=BatchSampler(batch_size, len(valid_indices)),
-                              num_workers=num_workers)
-    test_loader = DataLoader(dataset=test_set,
-                             batch_sampler=BatchSampler(batch_size, len(test_indices)),
-                             num_workers=num_workers)
 
     # I made a mistake in the saving script
     model_path = os.path.join('../trained_models', model_name, model_name + '.pth')
@@ -192,7 +183,7 @@ def make_predictions(model_choice, model_name):
     # optimizer = optim.Adam(None)
     # print(model, model_path)
 
-    dict_results = run_model(test_loader, model, model_path)
+    dict_results = run_model(loader, model, model_path)
     pickle.dump(dict_results, open(f'../data/post_processing/predictions/{model_name}.p', 'wb'))
     return dict_results
 
@@ -245,7 +236,7 @@ def get_distances(model_name='test_load'):
     reduced = reduce_preds(rearranged)
 
     # Get true labels and lig_to_pdb mapping
-    ligand_to_pdb = pickle.load(open('../data/post_processing/utils/lig_to_pdb.p', 'rb'))
+    ligand_to_pdb = pickle.load(open('../data/post_processing/utils/all_lig_to_pdb.p', 'rb'))
     emb = pickle.load(open('../data/ligands/whole_dict_embed_128.p', 'rb'))
 
     import scipy.spatial as sp
@@ -255,9 +246,12 @@ def get_distances(model_name='test_load'):
         temp = []
         true = emb[ligand]
         for pdb in pdb_list:
+            if pdb not in reduced:
+                continue
             pred = reduced[pdb][ligand].cpu().numpy()
             dist = sp.distance.euclidean(pred, true)**2
             temp.append((pdb, dist / 128))
+
         lig_dists[ligand] = temp
     pickle.dump(lig_dists, open(f'../data/post_processing/distances/{model_name}.p', 'wb'))
     return lig_dists
@@ -268,11 +262,50 @@ if __name__ == "__main__":
     model_choice = args.model
     model_name = args.name
 
+    pocket_file = 'data/pockets/'
+    pocket_data = args.pockets
+    pocket_path = os.path.join(pocket_file, pocket_data)
+    print(f'Using {pocket_path} as the pocket inputs')
+
+    if args.data_loading == 'fly':
+        augment_flips = True
+        ram = False
+    elif args.data_loading == 'hard':
+        augment_flips = False
+        ram = False
+    elif args.data_loading == 'ram':
+        augment_flips = True
+        ram = True
+    elif args.data_loading == 'hram':
+        augment_flips = False
+        ram = True
+    else:
+        raise ValueError('Not implemented this DataLoader yet')
+
+    # batch_size = 8
+    batch_size = args.batch_size
+    num_workers = args.workers
+    shuffled = args.shuffled
+    siamese = args.siamese
+    full_siamese = args.full_siamese
+    if full_siamese:
+        print(f'Using the full siamese pipeline, with batch size of {batch_size}')
+        siamese = False
+    else:
+        print(f'Using batch_size of {batch_size}, {"siamese" if siamese else "serial"} loading')
+
+    loader = Loader(pocket_path=pocket_path, ligand_path='data/ligands/whole_dict_embed_128.p',
+                    batch_size=batch_size, num_workers=num_workers, siamese=siamese, full_siamese=full_siamese,
+                    augment_flips=augment_flips, ram=ram, shuffled=shuffled)
+    train_loader, _, test_loader = loader.get_data()
+
     # make ligand_to_pdb dict
-    # ligand_to_pdb()
+    # test_loader.dataset.debug = True
+    # ligand_to_pdb(loader=test_loader)
 
     # Get prediction for the argparse arguments
-    # make_predictions(model_choice=model_choice, model_name=model_name)
+    test_loader.dataset.debug = False
+    make_predictions(model_choice=model_choice, model_name=model_name, loader=test_loader)
 
     # Get the ligands : distance distribution
     lig_dist = get_distances(model_name)
