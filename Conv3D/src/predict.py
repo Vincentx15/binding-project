@@ -32,11 +32,11 @@ import pickle
 from collections import defaultdict
 from torch.utils.data.dataset import Dataset
 from torch.utils.data import Subset, DataLoader
-from data.loader import Loader
 
 if __name__ == "__main__":
     sys.path.append('../')
 
+from data.loader import Loader
 
 
 """
@@ -81,7 +81,7 @@ def all_ligand_to_pdb(path='unique_pockets'):
     ligand_to_pdb = defaultdict(list)
     pathlist = os.listdir('../data/pockets/' + path)
     for i, path in enumerate(pathlist):
-        pdb, ligand = path[0].split('_')[0:2]
+        pdb, ligand = path.split('_')[0:2]
         ligand_to_pdb[ligand].append(pdb)
         if not i % 1000:
             print(i)
@@ -218,9 +218,9 @@ def rearrange_pdb_dict(preds):
     return rearranged
 
 
-def reduce_preds(preds):
+def reduce_preds(preds, average = False):
     """
-    Average this double dict for each 8 predictions
+    Clean this double dict for each 8 predictions by stacking them and optionnaly averaging them (bagging)
     :param preds:
     :return:
     """
@@ -230,12 +230,14 @@ def reduce_preds(preds):
             for ligand, tensor in dic_ligs.items():
                 # Works also if we only have one prediction
                 # tensor = [torch.zeros(128)]
-                avg = torch.stack(tensor, 1).mean(dim=1)
+                pred = torch.stack(tensor, 1)
+                if average:
+                    pred=pred.mean(dim=1)
                 # print(avg.size())
                 if pdb not in reduced:
-                    reduced[pdb] = {ligand: avg}
+                    reduced[pdb] = {ligand: pred}
                 else:
-                    reduced[pdb][ligand] = avg
+                    reduced[pdb][ligand] = pred
     return reduced
 
 
