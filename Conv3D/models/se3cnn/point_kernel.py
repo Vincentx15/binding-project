@@ -17,7 +17,7 @@ def get_Y_for_filter(irrep, filter_irreps, Y):
     end_index = start_index + (2 * irrep + 1)
     return Y[start_index:end_index]
 
-# TODO: Vectorize
+# trash_TODO: Vectorize
 def angular_function(difference_mat, order_in, order_out, filter_irreps, Ys, eps=1e-8):
     order_irreps = list(range(abs(order_in - order_out), order_in + order_out + 1))
     angular_filters = []
@@ -39,7 +39,7 @@ def angular_function(difference_mat, order_in, order_out, filter_irreps, Ys, eps
 
     return angular_filters, difference_mat.norm(2, -1), order_irreps
 
-# TODO: Reduce duplicate code in this and gaussian_window in kernel.py
+# trash_TODO: Reduce duplicate code in this and gaussian_window in kernel.py
 def gaussian_radial_function(solutions, r_field, order_irreps, radii, sigma=.6, J_max=10):
     '''
     gaussian radial function with  manual handling of shell radii, shell bandlimits and shell width
@@ -59,7 +59,7 @@ def gaussian_radial_function(solutions, r_field, order_irreps, radii, sigma=.6, 
     return torch.stack(basis, dim=0) if len(basis) > 0 else None
 
 
-# TODO: Split into radial and angular kernels
+# trash_TODO: Split into radial and angular kernels
 class SE3PointKernel(torch.nn.Module):
     def __init__(self, Rs_in, Rs_out, radii, radial_function=gaussian_radial_function, J_filter_max=10):
         '''
@@ -142,7 +142,7 @@ class SE3PointKernel(torch.nn.Module):
 
                     basis_kernels_ij = kij.contiguous().view(b_el, -1)  # [beta, i*j*N*M] or [beta, i*j*batch*N*M]
 
-                    # TODO: Rewrite as einsum
+                    # trash_TODO: Rewrite as einsum
                     ker = torch.mm(w, basis_kernels_ij)  # [I*J, i*j*N*M] or [I*J, i*j*batch*N*M]
                     ker = ker.view(m_out, m_in, *b_size)  # [I, J, i, j, N, M] or [I, J, i, j, batch, N, M]
                     ker = ker.transpose(1, 2).contiguous()  # [I, i, J, j, N, M] or [I, i, J, j, batch, N, M]

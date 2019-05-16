@@ -250,7 +250,7 @@ class SE3Kernel(torch.nn.Module):
                         w = torch.zeros(m_out, m_in, basis.size(0))
                         if abs(l_out - l_in) == min(abs(l_out - l_in_) for _m_in, l_in_ in self.Rs_in):
                             orthogonal_(w[:, :, 0])  # only the "simplest" base operation has a non-zero init
-                            # TODO this if might be called for multiple l input
+                            # trash_TODO this if might be called for multiple l input
                         weights += [w.flatten()]
 
                         basis /= basis.flatten(2).norm(dim=2).mean(1).view(basis.size(0), 1, 1, 1, 1, 1)

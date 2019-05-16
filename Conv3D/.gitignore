@@ -1,7 +1,14 @@
 data/ligands/
 data/pockets/
+data/post_processing/
+
 trained_models/
+full_trained_models/
+
 logs/
-notebooks/
+full_logs/
+
+notebooks/.ipynb_checkpoints
+
 *__pycache__*
 *trash*

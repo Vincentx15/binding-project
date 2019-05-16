@@ -127,7 +127,7 @@ def spherical_harmonics_xyz(order, xyz):
 
 
 def legendre(order, z):
-    # TODO accept list for order
+    # trash_TODO accept list for order
     """
     associated Legendre polynomials
 
@@ -153,7 +153,7 @@ def legendre(order, z):
 
 
 def spherical_harmonics_xyz_backwardable(order, xyz):
-    # TODO accept list for order
+    # trash_TODO accept list for order
     """
     spherical harmonics
 

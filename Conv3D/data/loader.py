@@ -256,7 +256,7 @@ class Conv3DDatasetHard(Dataset):
         :return:
         """
         if self.debug:
-            return 0, 0, self.pockets[item]
+            return self.pockets[item], 0, 0
 
         if self.augment_flips:
             pdb, rotation = self.pockets_rotations[item]
@@ -433,6 +433,30 @@ class Conv3DDatasetSiamese(Dataset):
         return pdb, tensor, ligand_embedding
 
 
+class Evaluation(Dataset):
+    def __init__(self, pocket_path='../data/pockets/unique_pockets_hard', debug=False):
+        self.path = pocket_path
+        self.pockets = sorted(os.listdir(pocket_path))
+        self.debug = debug
+
+    def __len__(self):
+        return len(self.pockets)
+
+    def __getitem__(self, item):
+        """
+        :param item:
+        :return:
+        """
+        pdb = self.pockets[item]
+        if self.debug:
+            return pdb
+        # a = time.perf_counter()
+        pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
+        pocket_tensor = torch.from_numpy(pocket_tensor)
+        pocket_tensor = pocket_tensor.float()
+        return pdb, pocket_tensor, 0
+
+
 if __name__ == '__main__':
     import time
 
@@ -461,8 +485,9 @@ if __name__ == '__main__':
     num_workers = 4
     print('Creation : ')
     a = time.perf_counter()
-    loader = Loader(pocket_path='pockets/unique_pockets', ligand_path='ligands/whole_dict_embed_128.p',
-                    batch_size=batch_size, num_workers=num_workers, full_siamese=True)
+    loader = Loader(pocket_path='pockets/unique_pockets_hard', ligand_path='ligands/whole_dict_embed_128.p',
+                    batch_size=batch_size, num_workers=num_workers, debug=False, siamese=False)
+
     # loader = Loader(pocket_path='pockets/unique_pockets_hard', ligand_path='ligands/whole_dict_embed_128.p',
     #                 batch_size=batch_size, num_workers=num_workers, augment_flips=False, ram=False)
     print(len(loader.dataset))
@@ -475,10 +500,12 @@ if __name__ == '__main__':
     a = time.perf_counter()
 
     loop = time.perf_counter()
+    tot=list()
     for batch_idx, (pdb, inputs, labels) in enumerate(train_loader):
-        print(inputs.size())
+        tot.extend(pdb)
         inputs.to(device)
         if not batch_idx % 20:
             print(batch_idx, time.perf_counter() - loop)
             loop = time.perf_counter()
     print('Done in : ', time.perf_counter() - a)
+    print(sorted(tot))
