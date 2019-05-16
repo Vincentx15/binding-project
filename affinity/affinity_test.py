@@ -6,6 +6,7 @@ from collections import namedtuple
 from collections import Counter
 from scipy.spatial.distance import euclidean
 import matplotlib.pyplot as plt
+import seaborn as sns
 import pickle
 import os.path as osp
 
@@ -27,7 +28,7 @@ def sdf_parse(sdf_file, fp_dict):
             fp = fp_dict[sm]
             affinity = data['Enzymologic: Ki nM ']
             lig_id = data['HET ID']
-            screen.append(Ligand(sm, affinity, fp[:128], lig_id))
+            screen.append(Ligand(sm, affinity, fp, lig_id))
         except:
             pass
     return screen
@@ -36,13 +37,33 @@ def screen_score(screen, pred, dist='euclidean'):
     #sort screen ligands by similarity to predicted
     if dist == 'euclidean':
         dist = euclidean
-    plt.scatter([s.affinity for s in screen],
-                [dist(pred.numpy(), s.fp) for s in screen])
+    N = len(screen)
+    affinity_sort = sorted(screen, key=lambda m:m.affinity)
+    distance_sort = sorted(screen, key=lambda m:dist(pred.numpy(), m.fp))
+    distance_ranks = [1 - i/N for i in range(N)]
+    affinity_ranks = []
+    for m in screen:
+        ind = 0
+        for a in affinity_sort:
+            if m.smiles == a.smiles:
+                affinity_ranks.append(1 - ind / N)
+                break
+            ind += 1
+
+    dists = [dist(pred.numpy(), m.fp) for m in screen]
+    screen_plot(dists, affinity_ranks)
+    return [dist(pred.numpy(), m.fp) for m in screen], affinity_ranks
+def screen_plot(distance_ranks, affinity_ranks):
+    sns.regplot(distance_ranks,affinity_ranks)
+    plt.xlabel("Distance Rank (1 is most similar to prediction)")
+    plt.ylabel("Affinity Rank (1 is highest affinity)")
     plt.show()
     pass
 
 def test_pockets(preds, fps, val_dir='data/validation_sets'):
     # for pdbid, lig_name in test_ids:
+    dists_tot = []
+    affs_tot = []
     for n in os.listdir(val_dir):
         pdbid = n.split("_")[0]
         try:
@@ -53,10 +74,13 @@ def test_pockets(preds, fps, val_dir='data/validation_sets'):
             lig = screen[0].lig_id
             pred_key = f"{pdbid.lower()}_{lig}"
             pred = preds[pred_key]
-            screen_score(screen, pred[0])
+            dists, affs = screen_score(screen, pred[0])
+            dists_tot.extend(dists)
+            affs_tot.extend(affs)
             print("DONE")
         except KeyError:
             pass
+    screen_plot(dists_tot, affs_tot)
 
 def flip_group(preds):
     """
@@ -72,7 +96,7 @@ def flip_group(preds):
     return flip_dict
 if __name__ == "__main__":
     validation_ids = pickle.load(open('data/test_ids.pickle', 'rb'))
-    fps = pickle.load(open('data/smiles.p', 'rb'))
+    fps = pickle.load(open('data/carlos_smiles_128.p', 'rb'))
     print("loading predictions")
     preds = pickle.load(open('data/preds_filter.pickle', 'rb'))
     print("loaded predictions")
