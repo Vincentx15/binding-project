@@ -9,8 +9,8 @@ from se3cnn.convolution import SE3PointConvolution
 from se3cnn.non_linearities import ScalarActivation
 
 # Added this for tetris_point.py
-# TODO: Refactor so we don't need separate functions for point and image
-# TODO: Broaden scope of function, add radial function, J_filter_max
+# trash_TODO: Refactor so we don't need separate functions for point and image
+# trash_TODO: Broaden scope of function, add radial function, J_filter_max
 class PointGatedBlock(torch.nn.Module):
     def __init__(self, repr_in, repr_out, radii, activation=(None, None)):
         super().__init__()

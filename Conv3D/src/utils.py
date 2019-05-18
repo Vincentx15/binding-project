@@ -130,6 +130,7 @@ def setup_dirs():
     Adds all ignored features
     :return:
     """
+    mkdir('data/post_processing')
     mkdir('data/post_processing/distances')
     mkdir('data/post_processing/predictions')
     mkdir('data/post_processing/utils')

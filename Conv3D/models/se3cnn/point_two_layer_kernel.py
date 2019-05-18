@@ -8,7 +8,7 @@ import math
 import torch.nn.functional as F
 
 
-# TODO: Split into radial and angular kernels
+# trash_TODO: Split into radial and angular kernels
 class SE3PointTwoLayerKernel(torch.nn.Module):
     def __init__(self, Rs_in, Rs_out, radii, radial_function=gaussian_radial_function, J_filter_max=10, radial_nonlinearity=None, hidden_dim=10):
         '''

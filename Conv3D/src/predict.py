@@ -30,14 +30,11 @@ import torch
 import sys, os
 import pickle
 from collections import defaultdict
-from torch.utils.data.dataset import Dataset
-from torch.utils.data import Subset, DataLoader
 
 if __name__ == "__main__":
     sys.path.append('../')
 
 from data.loader import Loader
-
 
 """
 Class for prediction, we want to know our model prediction on the dataset. Siamese ones will average the results
@@ -46,30 +43,6 @@ Usecase :  run the prediction on the model of your choice using python src.predi
 Then read the resulting dictionnary
 
 """
-
-
-class Evaluation(Dataset):
-    def __init__(self, pocket_path='../data/pockets/unique_pockets_hard', debug=False):
-        self.path = pocket_path
-        self.pockets = sorted(os.listdir(pocket_path))
-        self.debug = debug
-
-    def __len__(self):
-        return len(self.pockets)
-
-    def __getitem__(self, item):
-        """
-        :param item:
-        :return:
-        """
-        pdb = self.pockets[item]
-        if self.debug:
-            return pdb
-        # a = time.perf_counter()
-        pocket_tensor = np.load(os.path.join(self.path, pdb)).astype(dtype=np.uint8)
-        pocket_tensor = torch.from_numpy(pocket_tensor)
-        pocket_tensor = pocket_tensor.float()
-        return pdb, pocket_tensor, 0
 
 
 def all_ligand_to_pdb(path='unique_pockets'):
@@ -153,7 +126,7 @@ def make_predictions(model_choice, model_name, loader):
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # I made a mistake in the saving script
-    model_path = os.path.join('trained_models', model_name, model_name + '.pth')
+    model_path = os.path.join('../trained_models', model_name, model_name + '.pth')
 
     if model_choice == 'baby':
         from models.BabyC3D import BabyC3D
@@ -201,77 +174,6 @@ def make_predictions(model_choice, model_name, loader):
     return dict_results
 
 
-def rearrange_pdb_dict(preds):
-    """
-    Put the prediction in a double dict format
-    :param preds:
-    :return:
-    """
-    rearranged = {}
-    for key, value in preds.items():
-        # print(key)
-        # print(key.split('_')[:2])
-        pdb, lig = key.split('_')[:2]
-        if pdb not in rearranged:
-            rearranged[pdb] = defaultdict(list)
-        rearranged[pdb][lig].append(value)
-    return rearranged
-
-
-def reduce_preds(preds, average = False):
-    """
-    Clean this double dict for each 8 predictions by stacking them and optionnaly averaging them (bagging)
-    :param preds:
-    :return:
-    """
-    with torch.no_grad():
-        reduced = {}
-        for pdb, dic_ligs in preds.items():
-            for ligand, tensor in dic_ligs.items():
-                # Works also if we only have one prediction
-                # tensor = [torch.zeros(128)]
-                pred = torch.stack(tensor, 1)
-                if average:
-                    pred=pred.mean(dim=1)
-                # print(avg.size())
-                if pdb not in reduced:
-                    reduced[pdb] = {ligand: pred}
-                else:
-                    reduced[pdb][ligand] = pred
-    return reduced
-
-
-def get_distances(model_name='test_load'):
-    # Get predictions
-    pred_path = os.path.join('../data/post_processing/predictions/', model_name + '.p')
-    predictions = pickle.load(open(pred_path, 'rb'))
-
-    # reduce them
-    rearranged = rearrange_pdb_dict(predictions)
-    reduced = reduce_preds(rearranged)
-
-    # Get true labels and lig_to_pdb mapping
-    ligand_to_pdb = pickle.load(open('../data/post_processing/utils/all_lig_to_pdb.p', 'rb'))
-    emb = pickle.load(open('../data/ligands/whole_dict_embed_128.p', 'rb'))
-
-    import scipy.spatial as sp
-
-    lig_dists = {}
-    for ligand, pdb_list in ligand_to_pdb.items():
-        temp = []
-        true = emb[ligand]
-        for pdb in pdb_list:
-            if pdb not in reduced:
-                continue
-            pred = reduced[pdb][ligand].cpu().numpy()
-            dist = sp.distance.euclidean(pred, true) ** 2
-            temp.append((pdb, dist / 128))
-
-        lig_dists[ligand] = temp
-    pickle.dump(lig_dists, open(f'../data/post_processing/distances/{model_name}.p', 'wb'))
-    return lig_dists
-
-
 if __name__ == "__main__":
     pass
     model_choice = args.model
@@ -317,13 +219,8 @@ if __name__ == "__main__":
     # make ligand_to_pdb dict
     # test_loader.dataset.debug = True
     # ligand_to_pdb(loader=test_loader)
-    all_ligand_to_pdb()
+    # all_ligand_to_pdb()
 
     # Get prediction for the argparse arguments
     test_loader.dataset.debug = False
     make_predictions(model_choice=model_choice, model_name=model_name, loader=test_loader)
-
-    # Get the ligands : distance distribution
-    # lig_dist = get_distances('small_siamsplit_aligned_flips')
-    # lig_dist = get_distances(model_name)
-    # print(lig_dist)
