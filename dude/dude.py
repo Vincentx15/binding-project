@@ -2,6 +2,7 @@ import sys
 import os
 import pickle
 import gzip
+from collections import Counter
 
 import numpy as np
 from tqdm import tqdm
@@ -9,6 +10,7 @@ import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.spatial.distance import euclidean
+from sklearn import metrics
 
 from rdkit import Chem
 
@@ -37,6 +39,9 @@ tot_actives = []
 tot_decoys = []
 mean_diff = []
 locs = []
+EFS = []
+
+i = 0
 for t in tqdm(targets):
     try:
         pred = preds[t]
@@ -55,26 +60,40 @@ for t in tqdm(targets):
     for cond, dude_fps in fp_dict.items():
         for f in dude_fps:
             dist_dict[cond].append(euclidean(pred.numpy(), f))
-    # tot_actives.extend(dist_dict['actives'])
-    # tot_decoys.extend(dist_dict['decoys'])
-    diff = np.mean(dist_dict['decoys']) - np.mean(dist_dict['actives'])
-    loc = np.mean(dist_dict['decoys'] + dist_dict['actives'])
-    mean_diff.append(diff)
-    locs.append(loc)
-    print(loc, diff)
+    merged = [('a', d) for d in dist_dict['actives']] +\
+             [('d', d) for d in dist_dict['decoys']]
+
+    merged_sort = sorted(merged, key=lambda x:x[1])
+
+    labels = [lig[0] for lig in merged_sort]
+    dists = [lig[1] for lig in merged_sort]
+
+    norm = Counter(labels)['a'] / len(merged_sort)
+    thresholds = np.arange(100, len(merged_sort), 100)
+    efs = []
+    for t in thresholds:
+        ef = Counter(labels[:t])['a'] / t
+        ef /= norm
+        efs.append(ef)
+
+    EFS.append(efs)
+    # plt.plot(thresholds, efs)
+    # plt.show()
     # sns.distplot(dist_dict['actives'], label='actives')
     # sns.distplot(dist_dict['decoys'], label='decoys')
     # plt.legend()
     # plt.show()
 
-sns.distplot(mean_diff)
+for e in EFS:
+    plt.plot(e)
 plt.show()
+# sns.distplot(mean_diff)
+# plt.show()
 
-plt.scatter(locs, mean_diff)
-plt.show()
+# plt.scatter(locs, mean_diff)
+# plt.show()
 
 # sns.distplot(tot_actives, label='actives')
 # sns.distplot(tot_decoys, label='decoys')
 # plt.legend()
 # plt.show()
-
