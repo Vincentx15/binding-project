@@ -1,7 +1,7 @@
 import Bio.PDB
 import scipy as np
 import pickle
-import UFSR_feature as ufsr
+# import UFSR_feature as ufsr
 import time
 
 '''
@@ -168,6 +168,6 @@ def path_to_ufsr_dict(input_path, start_radius=3, max_radius=10, number_min=4, n
 
 if __name__ == "__main__":
     start_time = time.time()
-    dic = path_to_ufsr_dict('../data/protein/sample/1qfu.cif')
+    # dic = path_to_ufsr_dict('../data/protein/sample/1qfu.cif')
     print(" time --- %s seconds ---" % (time.time() - start_time))
     pass
