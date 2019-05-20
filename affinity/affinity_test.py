@@ -11,6 +11,7 @@ import pickle
 import os.path as osp
 
 import numpy as np
+import torch
 from rdkit import Chem
 
 
@@ -39,7 +40,7 @@ def screen_score(screen, pred, dist='euclidean'):
         dist = euclidean
     N = len(screen)
     affinity_sort = sorted(screen, key=lambda m:m.affinity)
-    distance_sort = sorted(screen, key=lambda m:dist(pred.numpy(), m.fp))
+    distance_sort = sorted(screen, key=lambda m:dist(pred, m.fp))
     distance_ranks = [1 - i/N for i in range(N)]
     affinity_ranks = []
     for m in screen:
@@ -50,13 +51,14 @@ def screen_score(screen, pred, dist='euclidean'):
                 break
             ind += 1
 
-    dists = [dist(pred.numpy(), m.fp) for m in screen]
+    dists = [dist(pred, m.fp) for m in screen]
     screen_plot(dists, affinity_ranks)
-    return [dist(pred.numpy(), m.fp) for m in screen], affinity_ranks
+    return [dist(pred, m.fp) for m in screen], affinity_ranks
 def screen_plot(distance_ranks, affinity_ranks):
     sns.regplot(distance_ranks,affinity_ranks)
     plt.xlabel("Distance Rank (1 is most similar to prediction)")
     plt.ylabel("Affinity Rank (1 is highest affinity)")
+    plt.title(r"$\gamma$")
     plt.show()
     pass
 
@@ -64,6 +66,7 @@ def test_pockets(preds, fps, val_dir='data/validation_sets'):
     # for pdbid, lig_name in test_ids:
     dists_tot = []
     affs_tot = []
+    counts = 0
     for n in os.listdir(val_dir):
         pdbid = n.split("_")[0]
         try:
@@ -74,7 +77,8 @@ def test_pockets(preds, fps, val_dir='data/validation_sets'):
             lig = screen[0].lig_id
             pred_key = f"{pdbid.lower()}_{lig}"
             pred = preds[pred_key]
-            dists, affs = screen_score(screen, pred[0])
+            dists, affs = screen_score(screen, pred.numpy())
+            counts += 1
             dists_tot.extend(dists)
             affs_tot.extend(affs)
             print("DONE")
@@ -92,7 +96,7 @@ def flip_group(preds):
         flips = []
         for flip in range(8):
             flips.append(preds[f"{i}_{flip}.npy"])
-        flip_dict[i] = flips
+        flip_dict[i] = torch.stack(flips, 1).mean(dim=1)
     return flip_dict
 if __name__ == "__main__":
     validation_ids = pickle.load(open('data/test_ids.pickle', 'rb'))
@@ -101,5 +105,7 @@ if __name__ == "__main__":
     preds = pickle.load(open('data/preds_filter.pickle', 'rb'))
     print("loaded predictions")
     preds = flip_group(preds)
-    test_pockets(preds, fps)
+    print(preds.keys())
+    print([p for p in preds if '3cqw' in p])
+    # test_pockets(preds, fps)
     pass
