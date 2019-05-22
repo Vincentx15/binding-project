@@ -3,6 +3,7 @@ import scipy as np
 import pickle
 # import UFSR_feature as ufsr
 import time
+import rdkit
 
 '''
 Define the extracting pipeline of ligands neighborhood.
@@ -13,8 +14,8 @@ Select all corresponding residues and output them in a pdb file
 
 AA = ["ALA", "CYS", "ASP", "GLU", "PHE", "GLY", "HIS", "ILE", "LYS", "LEU",
       "MET", "ASN", "PRO", "GLN", "ARG", "SER", "THR", "VAL", "TRP", "TYR"]
-with open("../data/ligands/set_of_ligands.pickle", "rb") as input_file:
-    set_of_ligands = pickle.load(input_file)
+# with open("../data/ligands/set_of_ligands.pickle", "rb") as input_file:
+    # set_of_ligands = pickle.load(input_file)
 
 '''
 Extraction tools
@@ -78,6 +79,39 @@ def find_spatial_binding_pocket(structure, ligand, start_radius, max_radius, num
     return neighbors
 
 
+def find_spatial_binding_pocket_mol2(structure, ligand_coords, start_radius, max_radius, number_min):
+    """
+    Find the smaller pocket
+    Find the neighborhood of each atom and get the intersection
+    :param structure: Biopython structure to search
+    :param ligand_coords: List of coordinates of ligand. 
+    :param start_radius: Radius to start with, should be small to avoid taking everything, big enough to not be empty
+    :param max_radius: The radius to stop to
+    :param number_min: The cutoff under which one needs to stop picking neighbors
+    :return:
+    """
+    searcher = Bio.PDB.NeighborSearch(list(structure.get_atoms()))
+    neighbors = set()
+    # Start by picking the neighbors closer to start radius
+    for atom in ligand_coords:
+        center = np.array(atom)
+        radius = start_radius
+        atom_result = []
+        # Get the number_min neighbors of each point by increasing the start_radius while the max_radius wasn't reached
+        while len(atom_result) < number_min and radius < max_radius:
+            # Start the search with the given center and radius
+            atom_result = []
+            atom_neighbors = searcher.search(center, radius)
+            # Filter out atoms part of water or pocket residue
+            for atom_neighbor in atom_neighbors:
+                residue = atom_neighbor.get_parent()
+                # if residue != ligand and residue.get_resname() != 'HOH':
+                if not residue.id[0].startswith('H_') and residue.get_resname() != 'HOH':
+                    atom_result.append(atom_neighbor)
+            radius += 1
+        for neighbor in atom_result:
+            neighbors.add(neighbor)
+    return neighbors
 def pocket_to_array(neighbors):
     return np.array([atom.get_coord() for atom in neighbors])
 
