@@ -2,4 +2,6 @@ utils_projects/
 *.idea/
 *.DS*
 dude/
+affinity/drawing/
+new/
 

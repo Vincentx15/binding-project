@@ -21,6 +21,20 @@ Script to :
 - Create an augmented dataset
 """
 
+'''
+# Script to count ligands :
+
+import os
+src_dir='pockets/unique_pockets'
+set_lig = set()
+for i, item in enumerate(os.listdir(src_dir)):
+    pdb, ligand = item.split('_')[0:2]
+    set_lig.add(ligand)
+    if not i % 1000:
+        print(i)
+print(len(set_lig))
+'''
+
 
 def remove_duplicates(src_dir='pockets/whole', dst_dir='pockets/unique_pockets'):
     """
