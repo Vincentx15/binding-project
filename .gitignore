@@ -1,7 +1,7 @@
 utils_projects/
 *.idea/
 *.DS*
-dude/
+dude/data
 affinity/drawing/
 new/
 
